@@ -1,25 +1,81 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import { Routes, Route } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import AuthService from "./services/auth.service";
+
+import Navbar from "./components/Layout/Navbar";
+
+import Login from "./components/Login";
+import Register from "./components/Register";
+import Home from "./components/Home";
+import Profile from "./components/Profile";
+// import BoardUser from "./components/BoardUser";
+import BoardModerator from "./components/BoardModerator";
+import BoardAdmin from "./components/BoardAdmin";
+import DetailProduct from "./components/DetailProduk";
+import TopUp from "./components/TopUp";
+import Keranjang from "./components/Keranjang";
+import CheckOut from "./components/CheckOut";
+
+// import AuthVerify from "./common/AuthVerify";
+
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.logOut = this.logOut.bind(this);
+
+    this.state = {
+      showModeratorBoard: false,
+      showAdminBoard: false,
+      currentUser: undefined,
+    };
+  }
+  componentDidMount() {
+    const user = AuthService.getCurrentUser();
+
+    if (user) {
+      this.setState({
+        currentUser: user,
+        showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
+        showAdminBoard: user.roles.includes("ROLE_ADMIN"),
+      });
+    }
+  };
+
+  logOut() {
+    AuthService.logout();
+    this.setState({
+      showModeratorBoard: false,
+      showAdminBoard: false,
+      currentUser: undefined,
+    });
+  }
+  render() {
+      return (
+        <div>
+          <Navbar>
+            <Routes>
+              <Route exact path={"/"} element={<Home />} />
+              <Route exact path={"/home"} element={<Home />} />
+              <Route exact path="/login" element={<Login />} />
+              <Route exact path="/register" element={<Register />} />
+              <Route exact path="/profile/:username" element={<Profile />} />
+              {/* <Route path="/user" element={<BoardUser />} /> */}
+              <Route path="/mod" element={<BoardModerator />} />
+              <Route path="/admin" element={<BoardAdmin />} />
+              <Route path="/detailProduct/:id" element={<DetailProduct/>}/>
+              <Route path="/top-up" element={<TopUp/>}/>
+              <Route path="/keranjang" element={<Keranjang/>}/>
+              <Route path="/check-out" element={<CheckOut/>}/>
+            </Routes>
+          </Navbar>
+        {/* <AuthVerify logOut={logOut}/> */}
+      </div>
+    );
+  };
+};
 
 export default App;
