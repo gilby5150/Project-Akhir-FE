@@ -22,7 +22,7 @@ class UserService {
   }
   
   updateUser(id,data) {
-    return api.put(`/users/${id}`,data);
+    return api.post(`/users/${id}`,data);
   }
 
   getUserRole() {

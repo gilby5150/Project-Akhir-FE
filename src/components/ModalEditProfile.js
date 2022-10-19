@@ -6,13 +6,11 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import FormControl from '@mui/material/FormControl';
 import TextField from "@mui/material/TextField"
-import dayjs from 'dayjs';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { useMutation } from "react-query";
 import EditIcon from '@mui/icons-material/Edit';
 import { InputLabel, Select, MenuItem } from '@mui/material'
 import UserService from '../services/user.service';
+import api from '../services/api';
 
 const style = {
   position: 'absolute',
@@ -27,69 +25,65 @@ const style = {
 };
 
 export default function ModalEditProfile({ id, userName }) {
-
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [successful, setSuccessful] = useState(false);
-  const [message, setMessage] = useState("");
-  const { username } = useParams()
-  const [detailUser, setDetailUser] = useState('')
-  // const {id} = useParams()
-
-  const [content, setContent] = useState({
-    fullname: '',
-    birthday: '',
-    gender: '',
-    email: '',
-    mobile: '',
-    address: '',
-  });
-  console.log(content)
-
+  const { username } = useParams();
+  const [detailUser, setDetailUser] = useState('');
+  const [preview, setPreview] = useState();
   const navigate = useNavigate();
 
   const handleChangeInput = (e) => {
-    setContent(
-      { ...content, [e.target.name]: e.target.value }
+    setDetailUser(
+      {
+        ...detailUser,
+        [e.target.name]:
+          e.target.type === 'file' ? e.target.files : e.target.value,
+      }
     );
+    if (e.target.type === 'file') {
+      let url = URL.createObjectURL(e.target.files[0]);
+      setPreview(url)
+    }
   };
 
   const getDetailUser = async () => {
     const userProfile = await UserService.getDetailUser(username);
-    setDetailUser(userProfile)
+    setDetailUser(userProfile?.data)
   }
 
   React.useEffect(() => {
     getDetailUser()
   }, [])
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = useMutation(async (e) => {
+    try {
+      e.preventDefault();
 
-    setMessage("");
-    setSuccessful(false);
-    if (content.userName ? content.userName : userName, content.birthday, content.gender, content.email, content.mobile, content.address) {
-      UserService.updateUser(id, content).then(
-        (response) => {
-          setContent(response.data);
-          window.location.reload();
+      const config = {
+        headers: {
+          'Content-type': 'multipart/form-data',
         },
-        (error) => {
-          const _content =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
+      };
+      const formData = new FormData()
+      formData.set('fullname', detailUser?.fullname)
+      formData.set('image', detailUser?.image[0])
+      formData.set('birthday', detailUser?.birthday)
+      formData.set('gender', detailUser?.gender)
+      formData.set('mobile', detailUser?.mobile)
+      formData.set('address', detailUser?.address)
+      formData.set('_method', 'PATCH')
 
-          setContent(_content);
-          // setMessage(resMessage);
-          setSuccessful(false);
-        }
-      );
+      const response = await api.post(`/users/${detailUser.id}`, formData, config);
+      // const response = await ProductService.createProduct(content.productName, content.image.name, content.price, content.category, content.stock, content.description, config);
+
+      console.log(response.data.data);
+      window.location.reload();
+      navigate(`/profile/${detailUser?.username}`)
+    } catch (err) {
+      console.log(err);
     }
-  }
+  });
 
   return (
     <div>
@@ -105,18 +99,17 @@ export default function ModalEditProfile({ id, userName }) {
             Profile
           </Typography>
           {detailUser ? (
-            <form style={{ margin: '3%' }} onSubmit={handleSubmit}>
+            <form style={{ margin: '3%' }} onSubmit={(e) => handleSubmit.mutate(e)}>
               <input hidden
                 onChange={handleChangeInput}
                 name='id'
-                value={content.id}
+                value={detailUser?.id}
               ></input>
-              <TextField InputProps={{
-                readOnly: true,
-              }} onChange={handleChangeInput} name="userName" fullWidth id="outlined-basic" label="Nama" variant="outlined" defaultValue={detailUser?.data.username} sx={{ marginBottom: '3%' }}></TextField>
-              <TextField onChange={handleChangeInput} name="fullname" fullWidth id="outlined-basic" label="Nama Lengkap" variant="outlined" defaultValue={detailUser?.data.fullname} sx={{ marginBottom: '3%' }}></TextField>
+              <TextField disabled onChange={handleChangeInput} name="userName" fullWidth id="outlined-basic" label="Nama" variant="outlined" defaultValue={detailUser?.username} sx={{ marginBottom: '3%' }}></TextField>
+              <TextField required onChange={handleChangeInput} name="fullname" fullWidth id="outlined-basic" label="Nama Lengkap" variant="outlined" defaultValue={detailUser?.fullname} sx={{ marginBottom: '3%' }}></TextField>
               <TextField
                 // inputFormat="YYYY-MM-DD"
+                required
                 fullWidth
                 variant="outlined"
                 name="birthday"
@@ -124,24 +117,11 @@ export default function ModalEditProfile({ id, userName }) {
                 label="Birthday"
                 type="date"
                 onChange={handleChangeInput}
-                defaultValue={detailUser?.data.username}
+                defaultValue={detailUser?.birthday}
                 InputLabelProps={{
                   shrink: true,
                 }}
               />
-              {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  //  name="birthday"
-                  inputFormat="YYYY-MM-DD"
-                  label="Tanggal lahir"
-                  value={value}
-                  // onChange={handleChangeInput}
-                  onChange={(newValue) => {
-                    setContent({ birthday: newValue });
-                  }}
-                  renderInput={(params) => <TextField name="birthday" value={content.birthday} onChange={handleChangeInput} fullWidth id="outlined-basic" varian="outlined" sx={{ marginBottom: '3%' }} {...params} ></TextField>}
-                />
-              </LocalizationProvider> */}
               <FormControl fullWidth sx={{ marginBottom: '1%', textAlign: 'start' }}>
                 <InputLabel id="demo-simple-select-label">Gender</InputLabel>
                 <Select
@@ -149,24 +129,23 @@ export default function ModalEditProfile({ id, userName }) {
                   name='gender'
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={content.gender}
+                  value={detailUser?.gender}
                   label="Gender"
                   onChange={handleChangeInput}
-                  defaultValue={detailUser?.data.gender}
                 >
                   <MenuItem value={'Laki-Laki'}>Laki-Laki</MenuItem>
                   <MenuItem value={'Perempuan'}>Perempuan</MenuItem>
                 </Select>
               </FormControl>
               <TextField
-                required
+                disabled
                 onChange={handleChangeInput}
                 name="email"
                 fullWidth
                 id="outlined-basic"
                 label="Email"
                 variant="outlined"
-                defaultValue={detailUser?.data.email}
+                defaultValue={detailUser?.email}
                 sx={{ marginBottom: '3%' }}></TextField>
               <TextField
                 required
@@ -177,7 +156,7 @@ export default function ModalEditProfile({ id, userName }) {
                 id="outlined-basic"
                 label="Nomor Hp"
                 variant="outlined"
-                defaultValue={detailUser?.data.mobile}
+                defaultValue={detailUser?.mobile}
                 sx={{ marginBottom: '3%' }}></TextField>
               <TextField
                 required
@@ -188,8 +167,18 @@ export default function ModalEditProfile({ id, userName }) {
                 id="outlined-basic"
                 label="Alamat"
                 variant="outlined"
-                defaultValue={detailUser?.data.address}
+                defaultValue={detailUser?.address}
                 sx={{ marginBottom: '3%' }}></TextField>
+              <Button variant="contained" component="label">
+                Upload
+                <input
+                  type="file"
+                  onChange={handleChangeInput}
+                  name="image"
+                  id="upload"
+                  hidden
+                />
+              </Button>
               <Button type="submit" sx={{ marginTop: '3%' }} variant="contained">save</Button>
             </form>
           ) : (<h1>Loading</h1>)}

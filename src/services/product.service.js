@@ -5,6 +5,10 @@ class ProductService {
     return api.get('/products');
   }
 
+  getCategoryProduct(category) {
+    return api.get(`/products?category=${category}`);
+  }
+
   getDetailProduct(id) {
     return api.get(`/products/${id}`);
   }

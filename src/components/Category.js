@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import {useParams} from 'react-router-dom';
+import UserService from "../services/user.service";
 import ProductService from "../services/product.service";
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -10,6 +12,7 @@ import CardMedia from '@mui/material/CardMedia';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import { CardActionArea, Button } from "@mui/material";
+import { faker } from "@faker-js/faker";
 import Stack from '@mui/material/Stack';
 
 // const drawerWidth = 240;
@@ -24,13 +27,14 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 
-const Home = () => {
-  const currency = format => format.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+const Category = () => {
   const [content, setContent] = useState([]);
   console.log(content)
 
+  const { Categoryname } = useParams()
+
   useEffect(() => {
-    ProductService.getAllProduct().then(
+    ProductService.getCategoryProduct(Categoryname).then(
       (response) => {
         setContent(response.data);
       },
@@ -61,7 +65,7 @@ const Home = () => {
                   <CardMedia
                     component="img"
                     height='auto'
-                    image={`http://localhost:8080/uploads/`+content.image}
+                    image={`http://localhost:8080/uploads/` + content.image}
                     alt="Product Phone"
                   />
                   <CardContent>
@@ -78,7 +82,7 @@ const Home = () => {
                           {content.productName}
                         </Typography>
                         <Typography variant="body2" >
-                          Rp.{currency(content.price)}
+                          Rp.{content.price}
                         </Typography>
                       </Stack>
                     </Typography>
@@ -97,7 +101,7 @@ const Home = () => {
                 </CardActionArea>
               </Card>
             </Grid>
-          )):<h1>Data Kosong</h1>}
+          )) : <h1>Data Kosong</h1>}
         </Grid>
       </Box>
       {/* </Box> */}
@@ -105,4 +109,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Category;

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import AuthService from '../../services/auth.service'
 import Box from '@mui/material/Box';
@@ -84,6 +84,7 @@ export default function PersistentDrawerLeft({ children }) {
     const [open, setOpen] = React.useState(false);
     const [showModeratorBoard, setShowModeratorBoard] = React.useState(false)
     const [showAdminBoard, setShowAdminBoard] = React.useState(false)
+    const [userBoard, setUserBoard] = React.useState(false)
     const [currentUser, setCurrentUser] = React.useState(undefined)
 
     const handleDrawerOpen = () => {
@@ -101,6 +102,7 @@ export default function PersistentDrawerLeft({ children }) {
     React.useEffect(() => {
         if (user) {
             setCurrentUser(user)
+            setUserBoard(user.roles.includes("ROLE_USER"))
             setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"))
             setShowAdminBoard(user.roles.includes("ROLE_ADMIN"))
         }
@@ -112,9 +114,9 @@ export default function PersistentDrawerLeft({ children }) {
         { href: '/keranjang', name: 'Keranjang', icon: <ShoppingCartOutlinedIcon /> },
     ]
     const Kategori = [
-        { href: '/home', name: 'Laptop', icon: <LaptopChromebookOutlinedIcon /> },
-        { href: '/home', name: 'Hp', icon: <PhoneIphoneOutlinedIcon /> },
-        { href: '/home', name: 'Kamera', icon: <CameraAltOutlinedIcon /> },
+        { href: '/category/laptop', name: 'Laptop', icon: <LaptopChromebookOutlinedIcon /> },
+        { href: '/category/hp', name: 'Hp', icon: <PhoneIphoneOutlinedIcon /> },
+        { href: '/category/kamera', name: 'Kamera', icon: <CameraAltOutlinedIcon /> },
     ]
 
     return (
@@ -219,44 +221,9 @@ export default function PersistentDrawerLeft({ children }) {
                 <List>
                     {Menu.map((text, index) => (
                         <>
-                        {/* { (user.roles[0] === "ROLE_MODERATOR" || user.roles[0] === "ROLE_ADMIN") && (text.name !== "TopUP Saldo" && text.name !== "Keranjang") ?( */}
-                        
-                        { (showModeratorBoard || showAdminBoard) && (text.name !== "TopUP Saldo" && text.name !== "Keranjang") ?(
-                            <Link href={text.href} underline="none" key={index}>
-                                <ListItem disablePadding>
-                                    <ListItemButton sx={{
-                                        minHeight: 48,
-                                        justifyContent: open ? 'initial' : 'center',
-                                        px: 2.5,
-                                    }}>
-                                        <ListItemIcon sx={{
-                                            minWidth: 0,
-                                            mr: open ? 3 : 'auto',
-                                            justifyContent: 'center',
-                                        }}
-                                        >
-                                            {text.icon}
-                                        </ListItemIcon >
-                                        <ListItemText primary={text.name} sx={{ color: 'black', opacity: open ? 1 : 0 }} />
-                                    </ListItemButton>
-                                </ListItem>
-                            </Link>
-                        ):''}
-                        </>
-                    ))}
-                </List>
-                <Divider />
-                <Accordion>
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <Typography>Kategori</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <List>
-                            {Kategori.map((text, index) => (
+                            {/* { (user.roles[0] === "ROLE_MODERATOR" || user.roles[0] === "ROLE_ADMIN") && (text.name !== "TopUP Saldo" && text.name !== "Keranjang") ?( */}
+
+                            {(userBoard) && (text.name === "TopUP Saldo" || text.name === "Keranjang") ? (
                                 <Link href={text.href} underline="none" key={index}>
                                     <ListItem disablePadding>
                                         <ListItemButton sx={{
@@ -276,12 +243,49 @@ export default function PersistentDrawerLeft({ children }) {
                                         </ListItemButton>
                                     </ListItem>
                                 </Link>
+                            ) : ''}
+                        </>
+                    ))}
+                </List>
+                <Divider />
+                <Accordion>
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                    >
+                        <Typography>Kategori</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <List>
+                            {Kategori.map((text, index) => (
+                                <Link href={text.href} underline="none" key={index}>
+                                    <ListItem disablePadding>
+                                        <ListItemButton
+                                            sx={{
+                                                minHeight: 48,
+                                                justifyContent: open ? 'initial' : 'center',
+                                                px: 2.5,
+                                            }}>
+                                            <ListItemIcon sx={{
+                                                minWidth: 0,
+                                                mr: open ? 3 : 'auto',
+                                                justifyContent: 'center',
+                                            }}
+                                            >
+                                                {text.icon}
+                                            </ListItemIcon >
+                                            <ListItemText primary={text.name} sx={{ color: 'black', opacity: open ? 1 : 0 }} />
+                                        </ListItemButton>
+                                    </ListItem>
+                                </Link>
                             ))}
                         </List>
                     </AccordionDetails>
                 </Accordion>
                 <Divider />
                 <List>
+                {(showAdminBoard || showModeratorBoard) ? (
                     <Link href={'/log'} underline="none">
                         <ListItem disablePadding>
                             <ListItemButton sx={{
@@ -301,6 +305,7 @@ export default function PersistentDrawerLeft({ children }) {
                             </ListItemButton>
                         </ListItem>
                     </Link>
+                ):''}
                 </List>
                 <Divider />
             </Drawer>

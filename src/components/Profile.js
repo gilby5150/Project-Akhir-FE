@@ -7,10 +7,7 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import CssBaseline from '@mui/material/CssBaseline';
 import CardMedia from '@mui/material/CardMedia'
-import CardActions from '@mui/material/CardActions'
 import CardContent from "@mui/material/CardContent";
-import Button from '@mui/material/Button'
-import { faker } from "@faker-js/faker";
 import { Typography } from "@mui/material";
 import TableOrder from './TableOrder';
 import ModalEditProfile from "./ModalEditProfile";
@@ -40,7 +37,7 @@ const Profile = () => {
     setDetailUser(userProfile)
   }
   const user = AuthService.getCurrentUser();
-  console.log(detailUser);
+  console.log(detailUser?.data);
 
   React.useEffect(() => {
       getDetailUser()
@@ -52,18 +49,17 @@ const Profile = () => {
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <Item>
+          <>
+          {detailUser ? (
             <CardMedia
               component="img"
               height='auto'
-              image={faker.image.people()}
-              alt="Product Phone"
+              image={`http://localhost:8080/uploads/`+detailUser?.data.image}
+              alt="Profile"
+              
             />
-            <CardActions sx={{ justifyContent: 'center' }}>
-              <Button variant="contained" component="label">
-                Upload
-                <input hidden accept="image/*" multiple type="file" />
-              </Button>
-            </CardActions>
+          ) : (<h1>Loading</h1>)}
+          </>
             <CardContent>
               <Typography variant="caption">
                 Besar file: maksimum 10.000.000 bytes (10 Megabytes). Ekstensi file yang diperbolehkan: .JPG .JPEG .PNG

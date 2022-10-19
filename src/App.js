@@ -18,6 +18,7 @@ import DetailProduct from "./components/DetailProduk";
 import TopUp from "./components/TopUp";
 import Keranjang from "./components/Keranjang";
 import CheckOut from "./components/CheckOut";
+import  Category  from "./components/Category";
 
 // import AuthVerify from "./common/AuthVerify";
 
@@ -70,6 +71,7 @@ class App extends Component {
               <Route path="/top-up" element={<TopUp/>}/>
               <Route path="/keranjang" element={<Keranjang/>}/>
               <Route path="/check-out" element={<CheckOut/>}/>
+              <Route path="/category/:Categoryname" element={<Category/>}/>
             </Routes>
           </Navbar>
         {/* <AuthVerify logOut={logOut}/> */}

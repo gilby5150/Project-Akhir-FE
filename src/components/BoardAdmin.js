@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import ProductService from "../services/product.service";
 import { styled } from '@mui/material/styles';
-import { Box, CardActions, Button, Paper, Card, CardMedia, Grid, CardContent, Typography, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import { faker } from "@faker-js/faker";
+import { Box, CardActions, Button, Paper, CardMedia, Grid, CardContent, Typography, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useMutation } from "react-query";
 import api from '../services/api'
-
+import { NumericFormat } from 'react-number-format';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -16,12 +14,32 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const BoardAdmin = () => {
-  const [preview, setPreview] = useState();
-  // const [successful, setSuccessful] = useState(false);
-  // const [message, setMessage] = useState("");
-  // const [data, setData] = useState();
+const NumberFormatCustom = React.forwardRef(function NumberFormatCustom(props, ref) {
+  const { onChange, ...other } = props;
 
+  return (
+    <NumericFormat
+      {...other}
+      getInputRef={ref}
+      onValueChange={(values) => {
+        onChange({
+          target: {
+            name: props.name,
+            value: values.value,
+          },
+        });
+      }}
+      thousandSeparator=","
+      isnumericstring="true"
+      prefix="Rp."
+    />
+  );
+});
+
+
+const BoardAdmin = () => {
+  // const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','));
+  const [preview, setPreview] = useState();
   const navigate = useNavigate();
   const [content, setContent] = useState({
     productName: '',
@@ -31,7 +49,7 @@ const BoardAdmin = () => {
     stock: '',
     description: '',
   });
-
+  
   const handleChangeInput = (e) => {
     setContent(
       {
@@ -46,37 +64,6 @@ const BoardAdmin = () => {
     }
   };
 
-  // console.log(content)
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   setMessage("");
-  //   setSuccessful(false);
-  //   if (content.productName, content.price, content.category, content.stock, content.description) {
-  //     ProductService.createProduct(content.productName, content.price, content.category, content.stock, content.description).then(
-  //       () => {
-  //         navigate(`/home`);
-  //         window.location.reload();
-  //       },
-  //       (response) => {
-  //         setContent(response.data);
-  //       },
-  //       (error) => {
-  //         const _content =
-  //           (error.response &&
-  //             error.response.data &&
-  //             error.response.data.message) ||
-  //           error.message ||
-  //           error.toString();
-
-  //         setContent(_content);
-  //         // setMessage(resMessage);
-  //         setSuccessful(false);
-  //       }
-  //     );
-  //   }
-  // }
 
   const handleSubmit = useMutation(async (e) => {
     try {
@@ -95,7 +82,7 @@ const BoardAdmin = () => {
       formData.set('stock', content.stock)
       formData.set('description', content.description)
 
-      const response = await api.post('/products',formData, config);
+      const response = await api.post('/products', formData, config);
       // const response = await ProductService.createProduct(content.productName, content.image.name, content.price, content.category, content.stock, content.description, config);
 
       console.log(response.data.data);
@@ -107,6 +94,7 @@ const BoardAdmin = () => {
 
 
   return (
+
     <div>
       <Box sx={{ display: 'flex', marginTop: '5%' }}>
         <Grid container spacing={2}>
@@ -122,7 +110,17 @@ const BoardAdmin = () => {
                   justifyContent="space-between"
                   alignItems="stretch">
                   <TextField name="productName" id="outlined-basic" label="Nama" variant="outlined" sx={{ marginBottom: '1%' }} onChange={handleChangeInput} />
-                  <TextField name="price" id="outlined-basic" label="Harga" variant="outlined" sx={{ marginBottom: '1%' }} onChange={handleChangeInput} />
+                  <TextField
+                    name="price"
+                    id="formatted-numberformat-input"
+                    value={content.price}
+                    InputProps={{
+                      inputComponent: NumberFormatCustom
+                    }}
+                    label="Harga"
+                    variant="outlined"
+                    sx={{ marginBottom: '1%' }}
+                    onChange={handleChangeInput} />
                   <FormControl sx={{ marginBottom: '1%', textAlign: 'start' }}>
                     <InputLabel id="demo-simple-select-label">Kategori</InputLabel>
                     <Select
@@ -158,7 +156,7 @@ const BoardAdmin = () => {
                       name="image"
                       id="upload"
                       hidden
-                       />
+                    />
                   </Button>
                   <Button type='submit'>save</Button>
                 </Grid>
