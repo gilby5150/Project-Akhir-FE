@@ -3,26 +3,13 @@ import PropTypes from 'prop-types';
 import UserService from '../services/user.service';
 import { alpha } from '@mui/material/styles';
 import {
-    Box,
-    Table,
-    TableBody,
-    TableContainer,
-    TableHead,
-    TablePagination,
-    TableRow,
-    Toolbar,
-    Typography,
-    Paper,
-    Checkbox,
-    IconButton,
-    Tooltip,
+    Box,Table,TableBody,TableContainer,TableHead,
+    TablePagination,TableRow,Toolbar,Typography,Paper,Checkbox,IconButton,Tooltip,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
-// import { visuallyHidden } from '@mui/utils';
-import { faker } from "@faker-js/faker";
 import ModalEditRole from './ModalEditRole'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -34,34 +21,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
         fontSize: 14,
     },
 }));
-
-function createData(name, photo, role, action) {
-    return {
-        name,
-        photo,
-        role,
-        action,
-    };
-}
-
-const rows = [
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. ')),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. ')),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. ')),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. ')),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. ')),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. ')),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. ')),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. ')),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. ')),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. ')),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. ')),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. ')),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. ')),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. ')),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. ')),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. ')),
-];
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -93,35 +52,8 @@ function stableSort(array, comparator) {
     return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
-    {
-        id: 'name',
-        numeric: false,
-        disablePadding: true,
-        label: 'Name',
-    },
-    {
-        id: 'photo',
-        numeric: false,
-        disablePadding: false,
-        label: 'Photo',
-    },
-    {
-        id: 'role',
-        numeric: false,
-        disablePadding: false,
-        label: 'Role',
-    },
-    {
-        id: 'action',
-        numeric: false,
-        disablePadding: false,
-        label: 'Action',
-    },
-];
-
 function EnhancedTableHead(props) {
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
+    const { onSelectAllClick, numSelected, rowCount} =
         props;
 
     return (
@@ -182,7 +114,7 @@ const EnhancedTableToolbar = (props) => {
             ) : (
                 <Typography
                     sx={{ flex: '1 1 100%' }}
-                    variant="h1"
+                    variant="h5"
                     id="tableTitle"
                     component="div"
                 >
@@ -217,7 +149,6 @@ export default function EnhancedTable() {
     const [orderBy, setOrderBy] = React.useState('calories');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
-    const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [content, setContent] = React.useState([]);
     console.log(content)
@@ -286,10 +217,6 @@ export default function EnhancedTable() {
 
     const isSelected = (name) => selected.indexOf(name) !== -1;
 
-    // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - content.length) : 0;
-
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
@@ -345,21 +272,17 @@ export default function EnhancedTable() {
                                                 {row.username}
                                                 {/* {content.username} */}
                                             </TableCell>
-                                            <TableCell align="center"><img src={row.photo} alt='product'></img></TableCell>
+                                            <TableCell align="center">
+                                                <img
+                                                height='50px'
+                                                    src={`http://localhost:8080/uploads/`+row.image}
+                                                    alt='profile'>
+                                                </img></TableCell>
                                             <TableCell align="center">{row.name}</TableCell>
                                             <TableCell align="center"><ModalEditRole userId={row.id} /></TableCell>
                                         </TableRow>
                                     );
                                 })}
-                            {emptyRows > 0 && (
-                                <TableRow
-                                    style={{
-                                        height: (dense ? 33 : 53) * emptyRows,
-                                    }}
-                                >
-                                    <TableCell colSpan={6} />
-                                </TableRow>
-                            )}
                         </TableBody>
                     </Table>
                 </TableContainer>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { styled } from '@mui/material/styles';
 import { Box, CardActions, Button, Paper, CardMedia, Grid, CardContent, Typography, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
@@ -113,7 +113,7 @@ const BoardAdmin = () => {
                   <TextField
                     name="price"
                     id="formatted-numberformat-input"
-                    value={content.price}
+                    value={content.price.numberformat}
                     InputProps={{
                       inputComponent: NumberFormatCustom
                     }}

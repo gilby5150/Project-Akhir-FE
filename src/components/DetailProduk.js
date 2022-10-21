@@ -5,6 +5,7 @@ import ProductService from "../services/product.service";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ModalCheckOut from './ModalCheckOut';
 import {
     Container, Box, CardMedia, Typography, Button, ButtonGroup, Grid, Paper, TextField, Stack
 } from "@mui/material";
@@ -22,8 +23,7 @@ const DetailProduct = () => {
     const currency = format => format.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     const { id } = useParams();
     const [content, setContent] = useState("");
-    console.log(content);
-    const [values, setValues] = useState(0);
+    const [values, setValues] = useState(1);
 
     useEffect(() => {
         ProductService.getDetailProduct(id).then(
@@ -39,19 +39,19 @@ const DetailProduct = () => {
                 setContent(_content);
             }
         );
-    }, []);
+    }, [id]);
+    console.log(content)
 
     const handleClickAdd = () => {
         setValues(values + 1);
     }
     const handleClickRemove = () => {
-        if (values <= 0) {
-            setValues(0)
+        if (values <= 1) {
+            setValues(1)
         } else {
             setValues(values - 1);
         }
     }
-
 
     return (
         <>
@@ -63,6 +63,7 @@ const DetailProduct = () => {
                                 <Grid item xs={2} sm={4} md={4}>
                                     <Item>
                                         <CardMedia
+                                            name="image"
                                             component="img"
                                             height='auto'
                                             image={`http://localhost:8080/uploads/` + content.image}
@@ -106,19 +107,24 @@ const DetailProduct = () => {
                                             Atur Jumlah
                                         </Typography>
                                         <ButtonGroup variant="outlined" aria-label="outlined button group">
-                                            <Button onClick={handleClickRemove}><RemoveIcon /></Button>
-                                            <TextField inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', }} value={values} />
-                                            <Button onClick={handleClickAdd}><AddIcon /></Button>
+                                        <Button onClick={handleClickRemove}><RemoveIcon /></Button>
+                                        <TextField inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', }} value={values} />
+                                        {(content?.stock - values) === 0 ? (
+
+                                            <Button disabled onClick={handleClickAdd}><AddIcon /></Button>    
+                                        ): (
+                                            <Button onClick={handleClickAdd}><AddIcon /></Button>    
+                                        )}
                                         </ButtonGroup>
                                         <Typography variant="body1" align='left' gutterBottom>
-                                            Stok total : {content.stock}
+                                            Stok total : {content?.stock - values}
                                         </Typography>
                                         <Stack direction="row" spacing={2} justifyContent="space-between">
                                             <Typography variant="body1">
                                                 Subtotal
                                             </Typography>
                                             <Typography variant="body1" align="right">
-                                                Rp.{currency(content?.price)}
+                                                Rp.{currency(content?.price * values)}
                                             </Typography>
                                         </Stack>
                                         {/* <ButtonGroup variant="contained" aria-label="outlined button group"> */}
@@ -126,7 +132,7 @@ const DetailProduct = () => {
                                             justifyContent="center"
                                             alignItems="center"
                                             spacing={2}>
-                                            <Button variant="contained" href='/check-out'>Beli</Button>
+                                            <ModalCheckOut subTotal={currency(content?.price * values)} />
                                             <Button variant="contained" href='/keranjang'><ShoppingCartIcon /></Button>
                                         </Stack>
                                         {/* </ButtonGroup> */}

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {useParams} from 'react-router-dom';
-import UserService from "../services/user.service";
 import ProductService from "../services/product.service";
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -12,7 +11,6 @@ import CardMedia from '@mui/material/CardMedia';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import { CardActionArea, Button } from "@mui/material";
-import { faker } from "@faker-js/faker";
 import Stack from '@mui/material/Stack';
 
 // const drawerWidth = 240;
@@ -28,6 +26,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 
 const Category = () => {
+  const currency = format => format.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
   const [content, setContent] = useState([]);
   console.log(content)
 
@@ -47,7 +46,7 @@ const Category = () => {
         setContent(_content);
       }
     );
-  }, []);
+  }, [Categoryname]);
 
   return (
     <div className="MuiDrawer-root">
@@ -64,7 +63,7 @@ const Category = () => {
                 <CardActionArea href={`/detailProduct/${content.id}`}>
                   <CardMedia
                     component="img"
-                    height='auto'
+                    height='345px'
                     image={`http://localhost:8080/uploads/` + content.image}
                     alt="Product Phone"
                   />
@@ -82,7 +81,7 @@ const Category = () => {
                           {content.productName}
                         </Typography>
                         <Typography variant="body2" >
-                          Rp.{content.price}
+                          Rp.{currency(content.price)}
                         </Typography>
                       </Stack>
                     </Typography>

@@ -20,9 +20,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 // import { visuallyHidden } from '@mui/utils';
 import { faker } from "@faker-js/faker";
-import Button from "@mui/material/Button";
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
 function createData(name, photo, harga, quantity, action) {
     return {
@@ -83,45 +80,12 @@ function stableSort(array, comparator) {
     return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
-    {
-        id: 'name',
-        numeric: false,
-        disablePadding: true,
-        label: 'Name',
-    },
-    {
-        id: 'photo',
-        numeric: false,
-        disablePadding: false,
-        label: 'Photo',
-    },
-    {
-        id: 'harga',
-        numeric: true,
-        disablePadding: false,
-        label: 'Harga',
-    },
-    {
-        id: 'quantity',
-        numeric: true,
-        disablePadding: false,
-        label: 'Quantity',
-    },
-    {
-        id: 'action',
-        numeric: false,
-        disablePadding: false,
-        label: 'Action',
-    },
-];
-
 function EnhancedTableHead(props) {
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
+    const { onSelectAllClick,  numSelected, rowCount, onRequestSort } =
         props;
-    const createSortHandler = (property) => (event) => {
-        onRequestSort(event, property);
-    };
+    // const createSortHandler = (property) => (event) => {
+    //     onRequestSort(event, property);
+    // };
 
     return (
         <TableHead>
@@ -137,27 +101,6 @@ function EnhancedTableHead(props) {
                         }}
                     />
                 </TableCell>
-                {/* {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))} */}
             </TableRow>
         </TableHead>
     );
@@ -165,7 +108,7 @@ function EnhancedTableHead(props) {
 
 EnhancedTableHead.propTypes = {
     numSelected: PropTypes.number.isRequired,
-    onRequestSort: PropTypes.func.isRequired,
+    // onRequestSort: PropTypes.func.isRequired,
     onSelectAllClick: PropTypes.func.isRequired,
     order: PropTypes.oneOf(['asc', 'desc']).isRequired,
     orderBy: PropTypes.string.isRequired,
@@ -298,7 +241,7 @@ export default function EnhancedTable() {
                             order={order}
                             orderBy={orderBy}
                             onSelectAllClick={handleSelectAllClick}
-                            onRequestSort={handleRequestSort}
+                            // onRequestSort={handleRequestSort}
                             rowCount={rows.length}
                         />
                         <TableBody>
@@ -340,15 +283,6 @@ export default function EnhancedTable() {
                                             <TableCell align="right"><img src={row.photo} alt='product'></img></TableCell>
                                             <TableCell align="right">{row.harga}</TableCell>
                                             <TableCell align="right">{row.quantity}</TableCell>
-                                            <TableCell align="right">
-                                                <Button>
-                                                    <RemoveCircleIcon />
-                                                </Button>
-                                                {row.action}
-                                                <Button>
-                                                    <AddCircleIcon />
-                                                </Button>
-                                            </TableCell>
                                         </TableRow>
                                     );
                                 })}

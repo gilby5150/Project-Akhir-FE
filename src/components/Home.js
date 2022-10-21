@@ -60,7 +60,7 @@ const Home = () => {
                 <CardActionArea href={`/detailProduct/${content.id}`}>
                   <CardMedia
                     component="img"
-                    height='auto'
+                    height='345px'
                     image={`http://localhost:8080/uploads/`+content.image}
                     alt="Product Phone"
                   />

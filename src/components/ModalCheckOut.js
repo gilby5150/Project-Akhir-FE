@@ -23,7 +23,7 @@ const style = {
   p: 4,
 };
 
-export default function ModalCheckOut() {
+export default function ModalCheckOut({subTotal}) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('Saldo');
   const handleOpen = () => setOpen(true);
@@ -35,7 +35,7 @@ export default function ModalCheckOut() {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Pilih Pembayaran</Button>
+      <Button variant="contained" onClick={handleOpen}>Beli</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -54,8 +54,8 @@ export default function ModalCheckOut() {
               value={value}
               onChange={handleChangeSaldo}
             >
-              <Stack direction="row" spacing={2} justifyContent="space-between" sx={{ marginTop: '10%', alignItems:'center'}}>
-                <FormControlLabel value="Saldo" control={<Radio />} label="Saldo"  sx={{ marginTop:0 }}/>
+              <Stack direction="row" spacing={2} justifyContent="space-between" sx={{ marginTop: '10%', alignItems: 'center' }}>
+                <FormControlLabel value="Saldo" control={<Radio />} label="Saldo" sx={{ marginTop: 0 }} />
                 <Typography variant="body1">
                   {faker.commerce.price(1000, 50000, 0, 'Rp. ')}
                 </Typography>
@@ -68,10 +68,10 @@ export default function ModalCheckOut() {
               Total Harga
             </Typography>
             <Typography variant="h5" align="right">
-              {faker.commerce.price(1000, 50000, 0, 'Rp. ')}
+              Rp. {subTotal}
             </Typography>
           </Stack>
-          <Button>Beli</Button>
+          <Button variant="contained">Beli</Button>
         </Box>
       </Modal>
     </div>

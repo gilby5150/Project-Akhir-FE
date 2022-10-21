@@ -1,31 +1,16 @@
 import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import AuthService from '../../services/auth.service'
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import CssBaseline from '@mui/material/CssBaseline';
+import {Box,Drawer,CssBaseline,Toolbar,List,Typography,Divider,IconButton,ListItem,ListItemButton,
+ListItemIcon,ListItemText,Button,Link,Accordion,AccordionSummary,AccordionDetails,} from '@mui/material';
 import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Button from '@mui/material/Button';
-import Link from '@mui/material/Link';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
 import LaptopChromebookOutlinedIcon from '@mui/icons-material/LaptopChromebookOutlined';
 import PhoneIphoneOutlinedIcon from '@mui/icons-material/PhoneIphoneOutlined';
 import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
@@ -105,12 +90,12 @@ export default function PersistentDrawerLeft({ children }) {
             setUserBoard(user.roles.includes("ROLE_USER"))
             setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"))
             setShowAdminBoard(user.roles.includes("ROLE_ADMIN"))
-        }
-    }, [])
+        }// eslint-disable-next-line
+    },[])
 
     const Menu = [
         { href: '/home', name: 'Home', icon: <HomeOutlinedIcon /> },
-        { href: '/top-up', name: 'TopUP Saldo', icon: <AccountBalanceWalletOutlinedIcon /> },
+        { href: `/top-up/${user && user.username}`, name: 'TopUP Saldo', icon: <AccountBalanceWalletOutlinedIcon /> },
         { href: '/keranjang', name: 'Keranjang', icon: <ShoppingCartOutlinedIcon /> },
     ]
     const Kategori = [
@@ -219,12 +204,12 @@ export default function PersistentDrawerLeft({ children }) {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    {Menu.map((text, index) => (
+                    {Menu.map((content, index) => (
                         <>
                             {/* { (user.roles[0] === "ROLE_MODERATOR" || user.roles[0] === "ROLE_ADMIN") && (text.name !== "TopUP Saldo" && text.name !== "Keranjang") ?( */}
 
-                            {(userBoard) && (text.name === "TopUP Saldo" || text.name === "Keranjang") ? (
-                                <Link href={text.href} underline="none" key={index}>
+                            {(userBoard) && (content.name === "TopUP Saldo" || content.name === "Keranjang" || content.name === "Home") ? (
+                                <Link href={content.href} underline="none" key={index}>
                                     <ListItem disablePadding>
                                         <ListItemButton sx={{
                                             minHeight: 48,
@@ -237,9 +222,9 @@ export default function PersistentDrawerLeft({ children }) {
                                                 justifyContent: 'center',
                                             }}
                                             >
-                                                {text.icon}
+                                                {content.icon}
                                             </ListItemIcon >
-                                            <ListItemText primary={text.name} sx={{ color: 'black', opacity: open ? 1 : 0 }} />
+                                            <ListItemText primary={content.name} sx={{ color: 'black', opacity: open ? 1 : 0 }} />
                                         </ListItemButton>
                                     </ListItem>
                                 </Link>
@@ -258,8 +243,8 @@ export default function PersistentDrawerLeft({ children }) {
                     </AccordionSummary>
                     <AccordionDetails>
                         <List>
-                            {Kategori.map((text, index) => (
-                                <Link href={text.href} underline="none" key={index}>
+                            {Kategori.map((content, index) => (
+                                <Link href={content.href} underline="none" key={index}>
                                     <ListItem disablePadding>
                                         <ListItemButton
                                             sx={{
@@ -273,9 +258,9 @@ export default function PersistentDrawerLeft({ children }) {
                                                 justifyContent: 'center',
                                             }}
                                             >
-                                                {text.icon}
+                                                {content.icon}
                                             </ListItemIcon >
-                                            <ListItemText primary={text.name} sx={{ color: 'black', opacity: open ? 1 : 0 }} />
+                                            <ListItemText primary={content.name} sx={{ color: 'black', opacity: open ? 1 : 0 }} />
                                         </ListItemButton>
                                     </ListItem>
                                 </Link>

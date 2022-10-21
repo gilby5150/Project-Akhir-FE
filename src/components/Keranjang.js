@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import TableCart from "./TableCart";
 import { styled } from '@mui/material/styles';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ModalCheckOut from './ModalCheckOut';
 import {
-    Box, Typography, Button, ButtonGroup, Grid, Paper, TextField, Stack
+    Box, Typography, Button, ButtonGroup, Grid, Paper, Stack
 } from "@mui/material";
 import { faker } from "@faker-js/faker";
 
@@ -20,16 +18,6 @@ const Item = styled(Paper)(({ theme }) => ({
 const Keranjang = () => {
     const [values, setValues] = useState(0);
 
-    const handleClickAdd = () => {
-        setValues(values + 1);
-    }
-    const handleClickRemove = () => {
-        if (values <= 0) {
-            setValues(0)
-        } else {
-            setValues(values - 1);
-        }
-    }
     return (
         <>
             <div style={{ height: 400, width: '100%', marginTop: '5%' }}>
@@ -45,11 +33,6 @@ const Keranjang = () => {
                                 <Typography variant="h4" sx={{ fontWeight: 'bold' }} align='left' gutterBottom>
                                     Ringkasan belanja
                                 </Typography>
-                                {/* <ButtonGroup variant="outlined" aria-label="outlined button group">
-                                    <Button onClick={handleClickRemove}><RemoveIcon /></Button>
-                                    <TextField min='0' value={values} inputProps={{ inputMode: 'string', pattern: '[0-9]*' }}></TextField>
-                                    <Button onClick={handleClickAdd}><AddIcon /></Button>
-                                </ButtonGroup> */}
                                 <Stack direction="row" spacing={2} justifyContent="space-between" sx={{ marginBottom: '10%', marginTop: '10%' }}>
                                     <Typography variant="h5">
                                         Total Harga
@@ -59,7 +42,7 @@ const Keranjang = () => {
                                     </Typography>
                                 </Stack>
                                 <ButtonGroup variant="contained" aria-label="outlined button group">
-                                    <Button href='/check-out'>Beli</Button>
+                                    <Button variant="contained"><ModalCheckOut/></Button>
                                 </ButtonGroup>
                             </Item>
                         </Grid>

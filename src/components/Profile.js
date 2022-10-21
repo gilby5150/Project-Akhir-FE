@@ -38,10 +38,10 @@ const Profile = () => {
   }
   const user = AuthService.getCurrentUser();
   console.log(detailUser?.data);
-
   React.useEffect(() => {
-      getDetailUser()
-  }, [])
+    getDetailUser()
+    // eslint-disable-next-line
+    },[])
 
   return (
     <Box sx={{ height: '100vh', marginTop: '5%' }}>
@@ -53,7 +53,7 @@ const Profile = () => {
           {detailUser ? (
             <CardMedia
               component="img"
-              height='auto'
+              height='345px'
               image={`http://localhost:8080/uploads/`+detailUser?.data.image}
               alt="Profile"
               
