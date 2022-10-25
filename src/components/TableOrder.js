@@ -33,21 +33,23 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 
 
-function createData(nama, photo, harga, quantity, status) {
-    return { nama, photo, harga, quantity, status };
+function createData(nama, photo, harga, quantity, payment, status) {
+    return { nama, photo, harga, quantity, payment, status };
 }
 
 const rows = [
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'success'),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'success'),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'success'),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'success'),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'success'),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'success'),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'success'),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'success'),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'success'),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'success'),
+    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Cod', 'shipped'),
+    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Saldo', 'success'),
+    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Cod', 'shipped'),
+    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Saldo', 'success'),
+    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Cod', 'shipped'),
+    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Saldo', 'success'),
+    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Cod', 'shipped'),
+    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Saldo', 'success'),
+    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Cod', 'shipped'),
+    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Saldo', 'success'),
+    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Cod', 'shipped'),
+    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Saldo', 'success'),
 ];
 
 export default function CustomizedTables() {
@@ -71,8 +73,9 @@ export default function CustomizedTables() {
                             <TableRow>
                                 <StyledTableCell>Nama Produk</StyledTableCell>
                                 <StyledTableCell align="center">Photo</StyledTableCell>
-                                <StyledTableCell align="center">Harga</StyledTableCell>
                                 <StyledTableCell align="center">Quantitas</StyledTableCell>
+                                <StyledTableCell align="center">Total Harga</StyledTableCell>
+                                <StyledTableCell align="center">Payment Method</StyledTableCell>
                                 <StyledTableCell align="center">Status</StyledTableCell>
                             </TableRow>
                         </TableHead>
@@ -86,8 +89,9 @@ export default function CustomizedTables() {
                                         {row.nama}
                                     </StyledTableCell>
                                     <StyledTableCell align="center"><img src={row.photo} alt='product'></img></StyledTableCell>
-                                    <StyledTableCell align="center">{row.harga}</StyledTableCell>
                                     <StyledTableCell align="center">{row.quantity}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.harga}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.payment}</StyledTableCell>
                                     <StyledTableCell align="center">{row.status}</StyledTableCell>
                                 </StyledTableRow>
                             ))}

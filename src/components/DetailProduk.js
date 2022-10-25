@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { styled } from '@mui/material/styles';
+import AuthService from "../services/auth.service";
+import UserService from "../services/user.service";
 import ProductService from "../services/product.service";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -9,7 +11,6 @@ import ModalCheckOut from './ModalCheckOut';
 import {
     Container, Box, CardMedia, Typography, Button, ButtonGroup, Grid, Paper, TextField, Stack
 } from "@mui/material";
-import { faker } from "@faker-js/faker";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -24,6 +25,23 @@ const DetailProduct = () => {
     const { id } = useParams();
     const [content, setContent] = useState("");
     const [values, setValues] = useState(1);
+    const user = AuthService.getCurrentUser();
+    // const { username } = AuthService.getCurrentUser();
+    const [currentUser, setCurrentUser] = React.useState(undefined)
+    const [detailUser, setDetailUser] = useState('')
+    const getDetailUser = async () => {
+        const userProfile = await UserService.getDetailUser(user.username);
+        setDetailUser(userProfile)
+    }
+    console.log(detailUser?.data);
+    React.useEffect(() => {
+        if(user){
+            setCurrentUser(user)
+            getDetailUser()
+        }
+        // eslint-disable-next-line
+    }, [user])
+    // console.log(user)
 
     useEffect(() => {
         ProductService.getDetailProduct(id).then(
@@ -107,14 +125,14 @@ const DetailProduct = () => {
                                             Atur Jumlah
                                         </Typography>
                                         <ButtonGroup variant="outlined" aria-label="outlined button group">
-                                        <Button onClick={handleClickRemove}><RemoveIcon /></Button>
-                                        <TextField inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', }} value={values} />
-                                        {(content?.stock - values) === 0 ? (
+                                            <Button onClick={handleClickRemove}><RemoveIcon /></Button>
+                                            <TextField inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', }} value={values} />
+                                            {(content?.stock - values) === 0 ? (
 
-                                            <Button disabled onClick={handleClickAdd}><AddIcon /></Button>    
-                                        ): (
-                                            <Button onClick={handleClickAdd}><AddIcon /></Button>    
-                                        )}
+                                                <Button disabled onClick={handleClickAdd}><AddIcon /></Button>
+                                            ) : (
+                                                <Button onClick={handleClickAdd}><AddIcon /></Button>
+                                            )}
                                         </ButtonGroup>
                                         <Typography variant="body1" align='left' gutterBottom>
                                             Stok total : {content?.stock - values}
@@ -127,27 +145,33 @@ const DetailProduct = () => {
                                                 Rp.{currency(content?.price * values)}
                                             </Typography>
                                         </Stack>
-                                        {/* <ButtonGroup variant="contained" aria-label="outlined button group"> */}
+                                        {currentUser ? (
                                         <Stack direction="row"
                                             justifyContent="center"
                                             alignItems="center"
                                             spacing={2}>
-                                            <ModalCheckOut subTotal={currency(content?.price * values)} />
+                                            <ModalCheckOut subTotal={currency(content?.price * values)} saldoUser={currency(detailUser?.data.saldo)} />
                                             <Button variant="contained" href='/keranjang'><ShoppingCartIcon /></Button>
                                         </Stack>
+                                        ):(<Button href="/login">login untuk membeli</Button>)}
                                         {/* </ButtonGroup> */}
                                     </Item>
+                                    <>
+                                    {currentUser ? (
                                     <Item>
                                         <Stack direction="row" spacing={2} justifyContent="space-between">
                                             <Typography variant="h4" sx={{ fontWeight: 'bold' }} align='left' gutterBottom>
                                                 Saldo
                                             </Typography>
                                             <Typography variant="h5" align="right">
-                                                {faker.commerce.price(1000, 20000, 2, 'Rp. ')}
+                                                {/* Rp.{currency(detailUser?.saldo)} ini saldo */}
+                                                Rp. {currency(detailUser?.data.saldo)}
                                             </Typography>
                                         </Stack>
-                                        <Button size='large' href='/top-up'>Tambah saldo ?</Button>
+                                        <Button size='large' href={`/top-up/${detailUser.data && detailUser.data.username}`}>Tambah saldo ?</Button>
                                     </Item>
+                                     ) : ('')}
+                                    </>
                                 </Grid>
                             </Grid>
                         ) : (<h1>Loading</h1>)}

@@ -9,7 +9,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Stack from '@mui/material/Stack';
-import { faker } from "@faker-js/faker";
 
 const style = {
   position: 'absolute',
@@ -23,7 +22,7 @@ const style = {
   p: 4,
 };
 
-export default function ModalCheckOut({subTotal}) {
+export default function ModalCheckOut({subTotal,saldoUser}) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('Saldo');
   const handleOpen = () => setOpen(true);
@@ -57,7 +56,7 @@ export default function ModalCheckOut({subTotal}) {
               <Stack direction="row" spacing={2} justifyContent="space-between" sx={{ marginTop: '10%', alignItems: 'center' }}>
                 <FormControlLabel value="Saldo" control={<Radio />} label="Saldo" sx={{ marginTop: 0 }} />
                 <Typography variant="body1">
-                  {faker.commerce.price(1000, 50000, 0, 'Rp. ')}
+                  Rp.{saldoUser}
                 </Typography>
               </Stack>
               <FormControlLabel value="COD" control={<Radio />} label="COD" />

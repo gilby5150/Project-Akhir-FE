@@ -148,14 +148,6 @@ export default function PersistentDrawerLeft({ children }) {
                                 Tambah Produk
                             </Button>
                         )}
-
-                        {/* {currentUser && (
-                            <Button
-                                href="/user"
-                                sx={{ color: '#fff' }}>
-                                User Page
-                            </Button>
-                        )} */}
                         {currentUser ? (
                             <>
                                 <Button

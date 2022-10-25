@@ -33,27 +33,26 @@ const NumberFormatCustom = React.forwardRef(function NumberFormatCustom(props, r
 const TopUp = () => {
     const currency = format => format.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     const { username } = useParams()
-    const [detailUser, setDetailUser] = useState({
-        saldo:'',
-    })
+    const [saldo, setSaldo] = useState(0)
+    const [jumlahSaldo, setJumlahSaldo] = useState(0)
+    const [detailUser, setDetailUser] = useState([])
     const navigate = useNavigate();
-
     const getDetailUser = async () => {
         const userProfile = await UserService.getDetailUser(username);
         setDetailUser(userProfile?.data)
+        
     }
-
+    
     React.useEffect(() => {
         getDetailUser()
-        // eslint-disable-next-line
     }, [])
-
+    
     const handleChangeInput = (e) => {
-        setDetailUser(
-            {
-                ...detailUser,
-                [e.target.name]: e.target.value,
-            }
+        const jumlah = Number(detailUser.saldo) + Number(e.target.value)
+        setJumlahSaldo(jumlah)
+        console.log(jumlah, detailUser.saldo)
+        setSaldo(
+            Number(e.target.value),
         );
     };
 
@@ -67,17 +66,19 @@ const TopUp = () => {
                 },
             };
             const formData = new FormData()
-            formData.set('saldo', detailUser?.saldo)
+            formData.set('saldo', jumlahSaldo)
             formData.set('_method', 'PATCH')
 
-            const response = await api.post(`/users/${detailUser?.id}`, formData, config);
-            console.log(response.data.data);
+            const response = await api.post(`/users/${detailUser.id}`, formData, config);
+            // localStorage.setItem("user", JSON.stringify(user));
+            console.log(response)
             window.location.reload();
-            navigate(`/top-up/${detailUser?.username}`)
+            navigate(`/top-up/${detailUser.username}`)
         } catch (err) {
             console.log(err);
         }
     });
+
 
     return (
         <>
@@ -87,16 +88,16 @@ const TopUp = () => {
                         <Grid item xs={6}>
                             <Card sx={{ marginTop: '5%' }}>
                                 <CardContent sx={{ height: '300px' }}>
-                                    {detailUser ? (
                                         <Stack direction="row" spacing={2} justifyContent="space-between">
                                             <Typography variant="h4" sx={{ fontWeight: 'bold' }} align='left' gutterBottom>
                                                 Saldo
                                             </Typography>
+                                            {detailUser ? (
                                             <Typography variant="h5" align="right">
-                                                Rp.{currency(detailUser?.saldo)}
+                                                Rp.{detailUser.saldo && currency(detailUser.saldo)}
                                             </Typography>
+                                            ): <p>data loading</p>}
                                         </Stack>
-                                    ) : (<h1>Loading</h1>)}
                                     <Typography sx={{ fontWeight: 'bold' }}>
                                         Mau Top-up berapa?
                                     </Typography>
@@ -105,7 +106,7 @@ const TopUp = () => {
                                             fullWidth
                                             name="saldo"
                                             id="formatted-numberformat-input"
-                                            value={detailUser?.saldo.NumberFormat}
+                                            value={saldo.NumberFormat}
                                             InputProps={{
                                                 inputComponent: NumberFormatCustom
                                             }}
@@ -116,7 +117,7 @@ const TopUp = () => {
                                     </form>
                                 </CardContent>
                                 <CardActions sx={{ justifyContent: 'center', marginBottom: '5%' }}>
-                                <Button onClick={(e) => handleSubmit.mutate(e)} type="submit" sx={{ marginTop: '3%' }} variant="contained">save</Button>
+                                    <Button onClick={(e) => handleSubmit.mutate(e)} type="submit" sx={{ marginTop: '3%' }} variant="contained">save</Button>
                                 </CardActions>
                             </Card>
                         </Grid>
