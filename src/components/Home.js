@@ -11,6 +11,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import { CardActionArea, Button } from "@mui/material";
 import Stack from '@mui/material/Stack';
+import Loader from './Layout/Loader';
 
 // const drawerWidth = 240;
 
@@ -56,13 +57,15 @@ const Home = () => {
         <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 6, sm: 6, md: 12 }}>
           {content.length ? content.map((content, index) => (
             <Grid item xs={0} sm={3} md={3} key={index}>
-              <Card sx={{ maxWidth: 345, height: '470px' }}>
+              <Card sx={{ maxWidth: 345, height: '100%' }}>
                 <CardActionArea href={`/detailProduct/${content.id}`}>
                   <CardMedia
+                    className='img-card'
                     component="img"
-                    height='345px'
-                    image={`http://localhost:8080/uploads/`+content.image}
-                    alt="Product Phone"
+                    width='auto'
+                    height='auto'
+                    image={`http://localhost:8080/uploads/` + content.image}
+                    alt="Product"
                   />
                   <CardContent>
                     <Typography gutterBottom variant="caption" component="div" sx={{ textoverflow: 'elipsis' }}>
@@ -74,7 +77,6 @@ const Home = () => {
                           WebkitBoxOrient: "vertical",
                           WebkitLineClamp: '1'
                         }}>
-                          {/* {faker.commerce.product()} */}
                           {content.productName}
                         </Typography>
                         <Typography variant="body2" >
@@ -97,7 +99,10 @@ const Home = () => {
                 </CardActionArea>
               </Card>
             </Grid>
-          )):<h1>Data Kosong</h1>}
+          )) :
+            <div className="Loader" style={{ marginTop: '20%', marginLeft: '50%' }}>
+              <Loader />
+            </div>}
         </Grid>
       </Box>
       {/* </Box> */}

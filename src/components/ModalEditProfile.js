@@ -5,7 +5,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import FormControl from '@mui/material/FormControl';
-import TextField from "@mui/material/TextField"
+import TextField from "@mui/material/TextField";
+import CardMedia from "@mui/material/CardMedia";
 import { useMutation } from "react-query";
 import EditIcon from '@mui/icons-material/Edit';
 import { InputLabel, Select, MenuItem } from '@mui/material'
@@ -100,6 +101,30 @@ export default function ModalEditProfile({ id, userName }) {
           </Typography>
           {detailUser ? (
             <form style={{ margin: '3%' }} onSubmit={(e) => handleSubmit.mutate(e)}>
+              { detailUser?.image ? (
+                <>
+                {preview ? (
+                  <CardMedia
+                  className='profile-img-card'
+                    component="img"
+                    image={preview}
+                    alt="Product"
+                  />
+                ) : (
+                  <CardMedia
+                  className='profile-img-card'
+                    component="img"
+                    image={`http://localhost:8080/uploads/` + detailUser?.image}
+                    alt="Product"
+                  />
+                )}
+                </>
+              ):(<CardMedia
+                className='profile-img-card'
+                  component="img"
+                  image='https://cdn.pixabay.com/photo/2013/07/13/12/07/avatar-159236__340.png'
+                  alt="Product"
+                />)}
               <input hidden
                 onChange={handleChangeInput}
                 name='id'
@@ -169,6 +194,7 @@ export default function ModalEditProfile({ id, userName }) {
                 variant="outlined"
                 defaultValue={detailUser?.address}
                 sx={{ marginBottom: '3%' }}></TextField>
+              
               <Button variant="contained" component="label">
                 Upload
                 <input
@@ -179,7 +205,7 @@ export default function ModalEditProfile({ id, userName }) {
                   hidden
                 />
               </Button>
-              <Button type="submit" sx={{ marginTop: '3%' }} variant="contained">save</Button>
+              <Button type="submit" sx={{ marginLeft: '45%' }} variant="contained">save</Button>
             </form>
           ) : (<h1>Loading</h1>)}
         </Box>

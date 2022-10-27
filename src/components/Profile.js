@@ -12,6 +12,7 @@ import { Typography } from "@mui/material";
 import TableOrder from './TableOrder';
 import ModalEditProfile from "./ModalEditProfile";
 import { useParams } from "react-router-dom";
+import Loader from './Layout/Loader';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -37,29 +38,43 @@ const Profile = () => {
     setDetailUser(userProfile)
   }
   const user = AuthService.getCurrentUser();
+  const [userBoard, setUserBoard] = React.useState(false)
   console.log(detailUser?.data);
+
   React.useEffect(() => {
+    if (user) {
+      setUserBoard(user.roles.includes("ROLE_USER"))
+    }
     getDetailUser()
     // eslint-disable-next-line
-    },[])
+  }, [])
 
   return (
     <Box sx={{ height: '100vh', marginTop: '5%' }}>
       <CssBaseline />
       <Grid container spacing={2}>
         <Grid item xs={4}>
-          <Item>
-          <>
-          {detailUser ? (
-            <CardMedia
+          <Item sx={{height:'100%'}}>
+            {detailUser && detailUser?.data.image ? (
+              <CardMedia
+              className='profile-img'
+              height='auto'
+              width='auto'
               component="img"
-              height='345px'
-              image={`http://localhost:8080/uploads/`+detailUser?.data.image}
-              alt="Profile"
-              
-            />
-          ) : (<h1>Loading</h1>)}
-          </>
+                image={`http://localhost:8080/uploads/` + detailUser?.data.image}
+                alt="Profile"
+
+              />
+            ) : (
+              <CardMedia
+              className='profile-img'
+              height='auto'
+              width='auto'
+              component="img"
+                image='https://cdn.pixabay.com/photo/2013/07/13/12/07/avatar-159236__340.png'
+                alt="Profile"
+
+              />)}
             <CardContent>
               <Typography variant="caption">
                 Besar file: maksimum 10.000.000 bytes (10 Megabytes). Ekstensi file yang diperbolehkan: .JPG .JPEG .PNG
@@ -103,12 +118,12 @@ const Profile = () => {
                   {detailUser ? (
                     <ItemBiodata>
                       <Typography variant="body1" align='left' sx={{ fontWeight: 'bold' }}>
-                      {/* {user.username} */}
-                      {detailUser?.data.username}
+                        {/* {user.username} */}
+                        {detailUser?.data.username}
                       </Typography>
                       <Typography variant="body1" align='left' sx={{ fontWeight: 'bold' }}>
-                      {/* {user.username} */}
-                      {detailUser?.data.fullname}
+                        {/* {user.username} */}
+                        {detailUser?.data.fullname}
                       </Typography>
                       <Typography variant="body1" align='left' sx={{ fontWeight: 'bold' }}>
                         {detailUser?.data.birthday}
@@ -127,20 +142,24 @@ const Profile = () => {
                         {detailUser?.data.address}
                       </Typography>
                     </ItemBiodata>
-                  ) : (<h1>Loading</h1>)}
+                  ) : <div className="Loader" style={{ marginTop: '20%', marginLeft: '50%' }}>
+                    <Loader />
+                  </div>}
                 </>
               </Grid>
             </Grid>
-            <ModalEditProfile id={user.id} userName={user.userName}/>
+            <ModalEditProfile id={user.id} userName={user.userName} />
           </Item>
         </Grid>
       </Grid >
-      <Grid>
-        <Item>
-          <Typography variant='h3'>Riwayat Order</Typography>
-          <TableOrder />
-        </Item>
-      </Grid>
+      {userBoard ? (
+        <Grid>
+          <Item>
+            <Typography variant='h3'>Riwayat Order</Typography>
+            <TableOrder />
+          </Item>
+        </Grid>
+      ) : ''}
     </Box >
   );
 };

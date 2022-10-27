@@ -67,7 +67,7 @@ export default function PersistentDrawerLeft({ children }) {
     const user = AuthService.getCurrentUser();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
-    const [showModeratorBoard, setShowModeratorBoard] = React.useState(false)
+    const [showSuperAdminBoard, setShowSuperAdminBoard] = React.useState(false)
     const [showAdminBoard, setShowAdminBoard] = React.useState(false)
     const [userBoard, setUserBoard] = React.useState(false)
     const [currentUser, setCurrentUser] = React.useState(undefined)
@@ -88,7 +88,7 @@ export default function PersistentDrawerLeft({ children }) {
         if (user) {
             setCurrentUser(user)
             setUserBoard(user.roles.includes("ROLE_USER"))
-            setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"))
+            setShowSuperAdminBoard(user.roles.includes("ROLE_SUPERADMIN"))
             setShowAdminBoard(user.roles.includes("ROLE_ADMIN"))
         }// eslint-disable-next-line
     },[])
@@ -134,11 +134,11 @@ export default function PersistentDrawerLeft({ children }) {
                             sx={{ color: '#fff' }}>
                             Home
                         </Button> */}
-                        {showModeratorBoard && (
+                        {showSuperAdminBoard && (
                             <Button
                                 href="/mod"
                                 sx={{ color: '#fff' }}>
-                                Moderator Page
+                                SuperAdmin Page
                             </Button>
                         )}
                         {showAdminBoard && (
@@ -198,8 +198,6 @@ export default function PersistentDrawerLeft({ children }) {
                 <List>
                     {Menu.map((content, index) => (
                         <>
-                            {/* { (user.roles[0] === "ROLE_MODERATOR" || user.roles[0] === "ROLE_ADMIN") && (text.name !== "TopUP Saldo" && text.name !== "Keranjang") ?( */}
-
                             {(userBoard) && (content.name === "TopUP Saldo" || content.name === "Keranjang" || content.name === "Home") ? (
                                 <Link href={content.href} underline="none" key={index}>
                                     <ListItem disablePadding>
@@ -262,7 +260,7 @@ export default function PersistentDrawerLeft({ children }) {
                 </Accordion>
                 <Divider />
                 <List>
-                {(showAdminBoard || showModeratorBoard) ? (
+                {(showAdminBoard || showSuperAdminBoard) ? (
                     <Link href={'/log'} underline="none">
                         <ListItem disablePadding>
                             <ListItemButton sx={{

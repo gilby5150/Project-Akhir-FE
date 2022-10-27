@@ -38,13 +38,33 @@ label {
 }
 
 .profile-img-card {
-  width: 96px !important;
-  height: 96px;
+  width: 50px !important;
+  height: 50px;
   margin: 0 auto 10px;
   display: block;
   -moz-border-radius: 50%;
   -webkit-border-radius: 50%;
   border-radius: 50%;
+}
+
+.profile-img {
+  width: 250px !important;
+  height: 250px;
+  margin: 0 auto 10px;
+  display: block;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+}
+
+.img-card {
+  width: 250px !important;
+  height: 250px;
+  margin: 0 auto 10px;
+  display: block;
+  /* -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%; */
 }
 
 .navbar-brand{

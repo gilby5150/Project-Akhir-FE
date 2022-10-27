@@ -12,7 +12,7 @@ import Register from "./components/Register";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
 // import BoardUser from "./components/BoardUser";
-import BoardModerator from "./components/BoardModerator";
+import BoardSuperAdmin from "./components/BoardSuperAdmin";
 import BoardAdmin from "./components/BoardAdmin";
 import DetailProduct from "./components/DetailProduk";
 import TopUp from "./components/TopUp";
@@ -29,7 +29,7 @@ class App extends Component {
     this.logOut = this.logOut.bind(this);
 
     this.state = {
-      showModeratorBoard: false,
+      showSuperAdminBoard: false,
       showAdminBoard: false,
       currentUser: undefined,
     };
@@ -40,7 +40,7 @@ class App extends Component {
     if (user) {
       this.setState({
         currentUser: user,
-        showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
+        showSuperAdminBoard: user.roles.includes("ROLE_SUPERADMIN"),
         showAdminBoard: user.roles.includes("ROLE_ADMIN"),
       });
     }
@@ -49,7 +49,7 @@ class App extends Component {
   logOut() {
     AuthService.logout();
     this.setState({
-      showModeratorBoard: false,
+      showSuperAdminBoard: false,
       showAdminBoard: false,
       currentUser: undefined,
     });
@@ -65,7 +65,7 @@ class App extends Component {
               <Route exact path="/register" element={<Register />} />
               <Route exact path="/profile/:username" element={<Profile />} />
               {/* <Route path="/user" element={<BoardUser />} /> */}
-              <Route path="/mod" element={<BoardModerator />} />
+              <Route path="/mod" element={<BoardSuperAdmin />} />
               <Route path="/admin" element={<BoardAdmin />} />
               <Route path="/detailProduct/:id" element={<DetailProduct/>}/>
               <Route path="/top-up/:username" element={<TopUp/>}/>

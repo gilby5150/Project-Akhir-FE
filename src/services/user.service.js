@@ -9,7 +9,7 @@ class UserService {
   //   return api.get('/test/user');
   // }
 
-  getModeratorBoard() {
+  getSuperAdminBoard() {
     return api.get('/test/mod');
   }
 

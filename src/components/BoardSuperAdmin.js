@@ -17,7 +17,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const drawerWidth = 240;
 
-const BoardModerator = () => {
+const BoardSuperAdmin = () => {
   const [content, setContent] = useState("");
   const [kategori, setKategori] = React.useState('');
 
@@ -26,7 +26,7 @@ const BoardModerator = () => {
   };
 
   useEffect(() => {
-    UserService.getModeratorBoard().then(
+    UserService.getSuperAdminBoard().then(
       (response) => {
         setContent(response.data);
       },
@@ -65,4 +65,4 @@ const BoardModerator = () => {
   );
 };
 
-export default BoardModerator;
+export default BoardSuperAdmin;

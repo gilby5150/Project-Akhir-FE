@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -6,8 +6,9 @@ import Modal from '@mui/material/Modal';
 import FormControl from '@mui/material/FormControl';
 import EditIcon from '@mui/icons-material/Edit';
 import { InputLabel, Select, MenuItem } from '@mui/material'
-import { useParams,useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import UserService from '../services/user.service';
+import AuthService from '../services/auth.service';
 
 const style = {
   position: 'absolute',
@@ -23,6 +24,7 @@ const style = {
 
 export default function ModalEditRole({ userId, roleId }) {
   // const {id} = useParams();
+  const user = AuthService.getCurrentUser();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     setOpen(true)
@@ -32,13 +34,20 @@ export default function ModalEditRole({ userId, roleId }) {
 
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
-
+  
   const navigate = useNavigate();
-
+  
   const [editRole, setEditRole] = useState({
     roleId: 0
   });
   console.log(editRole)
+  
+  const [showSuperAdminBoard, setShowSuperAdminBoard] = React.useState(false)
+  React.useEffect(() => {
+    if (user) {
+      setShowSuperAdminBoard(user.roles.includes("ROLE_SUPERADMIN"))
+    }// eslint-disable-next-line
+  }, [])
 
   const handleChangeInput = (e) => {
     setEditRole(
@@ -78,7 +87,9 @@ export default function ModalEditRole({ userId, roleId }) {
 
   return (
     <div>
-      <Button onClick={handleOpen}><EditIcon /></Button>
+      {showSuperAdminBoard ? (
+        <Button disabled onClick={handleOpen}><EditIcon /></Button>
+      ): (<Button onClick={handleOpen}><EditIcon /></Button>)}
       <Modal
         open={open}
         onClose={handleClose}
@@ -104,7 +115,7 @@ export default function ModalEditRole({ userId, roleId }) {
                 <MenuItem value={1}>User</MenuItem>
               </Select>
             </FormControl>
-          <Button type="submit" sx={{ marginTop: '3%' }} variant="contained">save</Button>
+            <Button type="submit" sx={{ marginTop: '3%' }} variant="contained">save</Button>
           </form>
         </Box>
       </Modal>

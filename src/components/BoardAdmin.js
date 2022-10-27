@@ -49,7 +49,7 @@ const BoardAdmin = () => {
     stock: '',
     description: '',
   });
-  
+
   const handleChangeInput = (e) => {
     setContent(
       {
@@ -164,18 +164,29 @@ const BoardAdmin = () => {
             </Item>
           </Grid>
           <Grid item xs={4}>
-            <Item>
-              <CardMedia
-                width="250px"
-                component="img"
-                height='auto'
-                // image={`http://localhost:8080/uploads/` + content.image}
-                image={preview}
-                alt="Product"
-              />
-              <CardActions sx={{ justifyContent: 'center' }}>
+            <Item sx={{ height: '100%' }}>
+              <>
+                {preview ? (
+                  <CardMedia
+                    className='img-card'
+                    width="auto"
+                    height='auto'
+                    component="img"
+                    image={preview}
+                    alt="Product"
+                  />
+                ) : (
+                  <CardMedia
+                    className='img-card'
+                    width="auto"
+                    height='auto'
+                    component="img"
+                    image='https://cdn-icons-png.flaticon.com/512/1242/1242418.png?w=740&t=st=1666856732~exp=1666857332~hmac=0e1769f494e4cab9d67e66c73c9ab5dd72590b33ad834e459e8b0ee296f1fc3b'
+                    alt="Product"
+                  />
+                )}
 
-              </CardActions>
+              </>
               <CardContent>
                 <Typography variant="caption">
                   Besar file: maksimum 10.000.000 bytes (10 Megabytes). Ekstensi file yang diperbolehkan: .JPG .JPEG .PNG

@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import UserService from '../services/user.service';
 import { alpha } from '@mui/material/styles';
 import {
-    Box,Table,TableBody,TableContainer,TableHead,
-    TablePagination,TableRow,Toolbar,Typography,Paper,Checkbox,IconButton,Tooltip,
+    Box, Table, TableBody, TableContainer, TableHead,
+    TablePagination, TableRow, Toolbar, Typography, Paper, Checkbox, IconButton, Tooltip,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -53,7 +53,7 @@ function stableSort(array, comparator) {
 }
 
 function EnhancedTableHead(props) {
-    const { onSelectAllClick, numSelected, rowCount} =
+    const { onSelectAllClick, numSelected, rowCount } =
         props;
 
     return (
@@ -272,14 +272,25 @@ export default function EnhancedTable() {
                                                 {row.username}
                                                 {/* {content.username} */}
                                             </TableCell>
-                                            <TableCell align="center">
-                                                <img
-                                                height='50px'
-                                                    src={`http://localhost:8080/uploads/`+row.image}
-                                                    alt='profile'>
-                                                </img></TableCell>
+                                            {content.image ? (
+                                                <TableCell align="center">
+                                                    <img
+                                                        className='profile-img-card'
+                                                        src={`http://localhost:8080/uploads/` + row.image}
+                                                        alt='profile'>
+                                                    </img>
+                                                </TableCell>
+                                            ) : (
+                                                <TableCell align="center">
+                                                    <img
+                                                        className='profile-img-card'
+                                                        src='https://cdn.pixabay.com/photo/2013/07/13/12/07/avatar-159236__340.png'
+                                                        alt='profile'>
+                                                    </img>
+                                                </TableCell>
+                                            )}
                                             <TableCell align="center">{row.name}</TableCell>
-                                            <TableCell align="center"><ModalEditRole userId={row.id} /></TableCell>
+                                                <TableCell align="center"><ModalEditRole userId={row.id} /></TableCell>
                                         </TableRow>
                                     );
                                 })}

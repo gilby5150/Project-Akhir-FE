@@ -102,9 +102,9 @@ const Login = () => {
           <CardMedia
             component="img"
             height='auto'
-            image="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+            image="https://www.wgs.co.id/assets/logo_wgs_fullBlack.svg"
             alt="profile-img"
-            className="profile-img-card"
+            // className="profile-img-card"
           />
           <CardContent>
             <Form onSubmit={handleLogin} ref={form}>

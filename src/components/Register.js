@@ -116,13 +116,13 @@ const Register = (props) => {
         component="main"
         sx={{ height: '100vh' }}
       >
-        <Card className="card card-container">
+        <Card className="card card-container" sx={{marginTop: '5%'}}>
           <CardMedia
             component="img"
             height='auto'
-            image="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+            image="https://www.wgs.co.id/assets/logo_wgs_fullBlack.svg"
             alt="profile-img"
-            className="profile-img-card"
+            // className="profile-img-card"
           />
           <CardContent>
             <Form onSubmit={handleRegister} ref={form}>

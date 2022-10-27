@@ -11,6 +11,7 @@ import ModalCheckOut from './ModalCheckOut';
 import {
     Container, Box, CardMedia, Typography, Button, ButtonGroup, Grid, Paper, TextField, Stack
 } from "@mui/material";
+import Loader from './Layout/Loader';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -174,7 +175,9 @@ const DetailProduct = () => {
                                     </>
                                 </Grid>
                             </Grid>
-                        ) : (<h1>Loading</h1>)}
+                        ) : <div className="Loader" style={{ marginTop: '20%', marginLeft: '50%' }}>
+                        <Loader />
+                      </div>}
                     </>
                 </Box>
             </Container>
