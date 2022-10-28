@@ -28,7 +28,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 const Home = () => {
   const currency = format => format.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
   const [content, setContent] = useState([]);
-  console.log(content)
 
   useEffect(() => {
     ProductService.getAllProduct().then(

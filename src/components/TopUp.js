@@ -50,7 +50,6 @@ const TopUp = () => {
     const handleChangeInput = (e) => {
         const jumlah = Number(detailUser.saldo) + Number(e.target.value)
         setJumlahSaldo(jumlah)
-        console.log(jumlah, detailUser.saldo)
         setSaldo(
             Number(e.target.value),
         );

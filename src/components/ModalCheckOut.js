@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { useNavigate } from "react-router-dom";
+import AuthService from "../services/auth.service";
+import OrderService from "../services/order.service";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -22,15 +25,36 @@ const style = {
   p: 4,
 };
 
-export default function ModalCheckOut({subTotal,saldoUser}) {
+export default function ModalCheckOut({subTotal,saldoUser,userId,productId,quantity}) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('Saldo');
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  const navigate = useNavigate();
+  const user = AuthService.getCurrentUser([]);
+  const [message, setMessage] = React.useState("");
   const handleChangeSaldo = (event) => {
     setValue(event.target.value);
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    OrderService.createOrder(userId, productId, quantity, subTotal).then(
+        () => {
+            // navigate(`/profile/${user.username}`);
+            // window.location.reload();
+        },
+        (error) => {
+            const resMessage =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            setMessage(resMessage);
+        }
+    );
+}
 
   return (
     <div>
@@ -70,7 +94,7 @@ export default function ModalCheckOut({subTotal,saldoUser}) {
               Rp. {subTotal}
             </Typography>
           </Stack>
-          <Button variant="contained">Beli</Button>
+          <Button variant="contained" onClick={handleSubmit}>Beli</Button>
         </Box>
       </Modal>
     </div>

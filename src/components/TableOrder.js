@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
+import OrderService from '../services/order.service';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -53,6 +54,7 @@ const rows = [
 ];
 
 export default function CustomizedTables() {
+    const [order, setOrder] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -64,11 +66,28 @@ export default function CustomizedTables() {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
+
+    useEffect(() => {
+        OrderService.getAllOrder().then(
+            (response) => {
+                setOrder(response.data);
+            },
+            (error) => {
+                const _order =
+                    (error.response && error.response.data) ||
+                    error.message ||
+                    error.toString();
+
+                setOrder(_order);
+            }
+        );
+    }, []);
+
     return (
-        <Box component="main" sx={{ }}>
-            <Box sx={{height: 'auto'}}>
-                <TableContainer component={Paper} sx={{height:'auto'}}>
-                    <Table sx={{ minWidth: 700}} aria-label="customized table">
+        <Box component="main" sx={{}}>
+            <Box sx={{ height: 'auto' }}>
+                <TableContainer component={Paper} sx={{ height: 'auto' }}>
+                    <Table sx={{ minWidth: 700 }} aria-label="customized table">
                         <TableHead >
                             <TableRow>
                                 <StyledTableCell>Nama Produk</StyledTableCell>
@@ -81,16 +100,23 @@ export default function CustomizedTables() {
                         </TableHead>
                         <TableBody>
                             {(rowsPerPage > 0
-                                ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                : rows
+                                ? order.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                : order
                             ).map((row) => (
-                                <StyledTableRow key={row.nama}>
+                                <StyledTableRow key={row.productName}>
                                     <StyledTableCell component="th" scope="row">
-                                        {row.nama}
+                                        {row.productName}
                                     </StyledTableCell>
-                                    <StyledTableCell align="center"><img src={row.photo} alt='product'></img></StyledTableCell>
+                                    <StyledTableCell align="center">
+                                        <img
+                                            width='50px'
+                                            height='50px'
+                                            src={`http://localhost:8080/uploads/` + row.image}
+                                            alt='product'>
+                                        </img>
+                                    </StyledTableCell>
                                     <StyledTableCell align="center">{row.quantity}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.harga}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.totalPrice}</StyledTableCell>
                                     <StyledTableCell align="center">{row.payment}</StyledTableCell>
                                     <StyledTableCell align="center">{row.status}</StyledTableCell>
                                 </StyledTableRow>
@@ -101,7 +127,7 @@ export default function CustomizedTables() {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={rows.length}
+                    count={order.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}

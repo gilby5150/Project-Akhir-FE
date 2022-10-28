@@ -40,7 +40,6 @@ export default function ModalEditRole({ userId, roleId }) {
   const [editRole, setEditRole] = useState({
     roleId: 0
   });
-  console.log(editRole)
   
   const [showSuperAdminBoard, setShowSuperAdminBoard] = React.useState(false)
   React.useEffect(() => {

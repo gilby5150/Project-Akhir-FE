@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TableCart from "./TableCart";
 import { styled } from '@mui/material/styles';
+import CartService from '../services/cart.service';
 import ModalCheckOut from './ModalCheckOut';
+import AuthService from "../services/auth.service";
+import UserService from "../services/user.service";
 import {
     Box, Typography, Button, ButtonGroup, Grid, Paper, Stack
 } from "@mui/material";
-import { faker } from "@faker-js/faker";
+import Loader from './Layout/Loader';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -16,7 +19,38 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const Keranjang = () => {
+    const currency = format => format.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     const [values, setValues] = useState(0);
+    const [cart, setCart] = React.useState([]);
+    const user = AuthService.getCurrentUser([]);
+    const [detailUser, setDetailUser] = useState('');
+    console.log(detailUser)
+    const getDetailUser = async () => {
+        const userProfile = await UserService.getDetailUser(user.username);
+        setDetailUser(userProfile.data)
+    }
+    useEffect(() => {
+        CartService.getAllCart().then(
+            (response) => {
+                setCart(response.data);
+            },
+            (error) => {
+                const _cart =
+                    (error.response && error.response.data) ||
+                    error.message ||
+                    error.toString();
+
+                setCart(_cart);
+            }
+        );
+        getDetailUser()
+    }, []);
+    let result = cart.map(({ totalPrice }) => totalPrice)
+    let totalPriceCart = 0;
+    for (let index = 0; index < result.length; index++) {
+        totalPriceCart += result[index];
+
+    }
 
     return (
         <>
@@ -29,7 +63,7 @@ const Keranjang = () => {
                             </Item>
                         </Grid>
                         <Grid item xs={4} >
-                            <Item>
+                            <Item sx={{ height: '100%' }}>
                                 <Typography variant="h4" sx={{ fontWeight: 'bold' }} align='left' gutterBottom>
                                     Ringkasan belanja
                                 </Typography>
@@ -37,13 +71,25 @@ const Keranjang = () => {
                                     <Typography variant="h5">
                                         Total Harga
                                     </Typography>
-                                    <Typography variant="h5" align="right">
-                                        {faker.commerce.price(1000, 50000, 0, 'Rp. ')}
-                                    </Typography>
+                                    {cart.length ? (
+                                        <Typography variant="h5" align="right">
+                                            Rp. {totalPriceCart}
+                                        </Typography>
+
+                                    ) :
+                                        <div style={{ marginTop: '20%' }}>
+                                            <Loader />
+                                        </div>
+                                    }
                                 </Stack>
-                                <ButtonGroup variant="contained" aria-label="outlined button group">
-                                    <Button variant="contained"><ModalCheckOut/></Button>
-                                </ButtonGroup>
+                                {detailUser ? (
+                                    <ButtonGroup variant="contained" aria-label="outlined button group">
+                                        <ModalCheckOut subTotal={totalPriceCart} saldoUser={currency && currency(detailUser?.saldo)} />
+                                    </ButtonGroup>
+
+                                ) : <div style={{ marginTop: '20%' }}>
+                                    <Loader />
+                                </div>}
                             </Item>
                         </Grid>
                     </Grid>

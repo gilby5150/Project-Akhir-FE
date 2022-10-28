@@ -29,8 +29,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 const Category = () => {
   const currency = format => format.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
   const [content, setContent] = useState([]);
-  console.log(content)
-
   const { Categoryname } = useParams()
 
   useEffect(() => {

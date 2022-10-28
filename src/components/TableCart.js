@@ -1,5 +1,6 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import CartService from '../services/cart.service';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -20,35 +21,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 // import { visuallyHidden } from '@mui/utils';
 import { faker } from "@faker-js/faker";
-
-function createData(name, photo, harga, quantity, action) {
-    return {
-        name,
-        photo,
-        harga,
-        quantity,
-        action,
-    };
-}
-
-const rows = [
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), faker.random.numeric()),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), faker.random.numeric()),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), faker.random.numeric()),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), faker.random.numeric()),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), faker.random.numeric()),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), faker.random.numeric()),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), faker.random.numeric()),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), faker.random.numeric()),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), faker.random.numeric()),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), faker.random.numeric()),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), faker.random.numeric()),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), faker.random.numeric()),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), faker.random.numeric()),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), faker.random.numeric()),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), faker.random.numeric()),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), faker.random.numeric()),
-];
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -81,7 +53,7 @@ function stableSort(array, comparator) {
 }
 
 function EnhancedTableHead(props) {
-    const { onSelectAllClick,  numSelected, rowCount, onRequestSort } =
+    const { onSelectAllClick, numSelected, rowCount, onRequestSort } =
         props;
     // const createSortHandler = (property) => (event) => {
     //     onRequestSort(event, property);
@@ -176,6 +148,23 @@ export default function EnhancedTable() {
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [cart, setCart] = React.useState([]);
+
+    useEffect(() => {
+        CartService.getAllCart().then(
+            (response) => {
+                setCart(response.data);
+            },
+            (error) => {
+                const _cart =
+                    (error.response && error.response.data) ||
+                    error.message ||
+                    error.toString();
+
+                setCart(_cart);
+            }
+        );
+    }, []);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -185,19 +174,19 @@ export default function EnhancedTable() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = rows.map((n) => n.name);
+            const newSelected = cart.map((n) => n.productName);
             setSelected(newSelected);
             return;
         }
         setSelected([]);
     };
 
-    const handleClick = (event, name) => {
-        const selectedIndex = selected.indexOf(name);
+    const handleClick = (event, productName) => {
+        const selectedIndex = selected.indexOf(productName);
         let newSelected = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, name);
+            newSelected = newSelected.concat(selected, productName);
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selected.slice(1));
         } else if (selectedIndex === selected.length - 1) {
@@ -225,7 +214,7 @@ export default function EnhancedTable() {
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - cart.length) : 0;
 
     return (
         <Box sx={{ width: '100%' }}>
@@ -242,25 +231,25 @@ export default function EnhancedTable() {
                             orderBy={orderBy}
                             onSelectAllClick={handleSelectAllClick}
                             // onRequestSort={handleRequestSort}
-                            rowCount={rows.length}
+                            rowCount={cart.length}
                         />
                         <TableBody>
                             {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-                            {stableSort(rows, getComparator(order, orderBy))
+                            {stableSort(cart, getComparator(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
-                                    const isItemSelected = isSelected(row.name);
+                                    const isItemSelected = isSelected(row.productName);
                                     const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={(event) => handleClick(event, row.name)}
+                                            onClick={(event) => handleClick(event, row.productName)}
                                             role="checkbox"
                                             aria-checked={isItemSelected}
                                             tabIndex={-1}
-                                            key={row.name}
+                                            key={row.productName}
                                             selected={isItemSelected}
                                         >
                                             <TableCell padding="checkbox">
@@ -278,10 +267,16 @@ export default function EnhancedTable() {
                                                 scope="row"
                                                 padding="none"
                                             >
-                                                {row.name}
+                                                {row.productName}
                                             </TableCell>
-                                            <TableCell align="right"><img src={row.photo} alt='product'></img></TableCell>
-                                            <TableCell align="right">{row.harga}</TableCell>
+                                            <TableCell align="right">
+                                                <img
+                                                    width='50px'
+                                                    height='50px'
+                                                    src={`http://localhost:8080/uploads/` + row.image}
+                                                    alt='profile'>
+                                                </img></TableCell>
+                                            <TableCell align="right">{row.totalPrice}</TableCell>
                                             <TableCell align="right">{row.quantity}</TableCell>
                                         </TableRow>
                                     );
@@ -301,7 +296,7 @@ export default function EnhancedTable() {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={rows.length}
+                    count={cart.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}

@@ -69,7 +69,7 @@ class App extends Component {
               <Route path="/admin" element={<BoardAdmin />} />
               <Route path="/detailProduct/:id" element={<DetailProduct/>}/>
               <Route path="/top-up/:username" element={<TopUp/>}/>
-              <Route path="/keranjang" element={<Keranjang/>}/>
+              <Route path="/keranjang/:username" element={<Keranjang/>}/>
               <Route path="/check-out" element={<CheckOut/>}/>
               <Route path="/category/:Categoryname" element={<Category/>}/>
             </Routes>

@@ -39,7 +39,6 @@ const Profile = () => {
   }
   const user = AuthService.getCurrentUser();
   const [userBoard, setUserBoard] = React.useState(false)
-  console.log(detailUser?.data);
 
   React.useEffect(() => {
     if (user) {

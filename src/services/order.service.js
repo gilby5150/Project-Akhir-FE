@@ -5,18 +5,14 @@ class OrderService {
     return api.get('/pembelian');
   }
 
-  // getCategoryProduct(category) {
-  //   return api.get(`/products?category=${category}`);
-  // }
-
-  // getDetailProduct(id) {
-  //   return api.get(`/products/${id}`);
-  // }
-
-  createOrder(formData, config) {
-    return api.post("/pembelian", {
-      formData, config
+  async createOrder(userId, productId, quantity, totalPrice, status) {
+    const response = await api.post("/cart", {
+      userId, productId, quantity, totalPrice, status
     });
+    if (response.data) {
+      console.log(response.data);
+    }
+    return response.data;
   }
 }
 
