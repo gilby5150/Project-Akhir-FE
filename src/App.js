@@ -6,7 +6,7 @@ import "./App.css";
 import AuthService from "./services/auth.service";
 
 import Navbar from "./components/Layout/Navbar";
-
+import AppLog from "./components/AppLog";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Home from "./components/Home";
@@ -71,6 +71,7 @@ class App extends Component {
               <Route path="/top-up/:username" element={<TopUp/>}/>
               <Route path="/keranjang/:username" element={<Keranjang/>}/>
               <Route path="/check-out" element={<CheckOut/>}/>
+              <Route path="/log" element={<AppLog/>}/>
               <Route path="/category/:Categoryname" element={<Category/>}/>
             </Routes>
           </Navbar>
