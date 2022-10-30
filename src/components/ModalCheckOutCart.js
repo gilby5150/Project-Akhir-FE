@@ -42,9 +42,9 @@ export default function ModalCheckOut({ subTotal, saldoUser, userId, productId, 
   const handleSubmit = (e) => {
     e.preventDefault();
     setStatus(value === 'Saldo' ? 'Success' : 'Delivered')
-    OrderService.createOrder(userId, productId, quantity, subTotal, value, status).then(
+    OrderService.createOrderCart(userId, productId, quantity, subTotal, value, status).then(
       () => {
-        navigate(`/home`);
+        navigate(`/profile/${user.username}`);
         window.location.reload();
       },
       (error) => {

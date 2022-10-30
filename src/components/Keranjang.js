@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import TableCart from "./TableCart";
 import { styled } from '@mui/material/styles';
 import CartService from '../services/cart.service';
-import ModalCheckOut from './ModalCheckOut';
+import ModalCheckOutCart from './ModalCheckOutCart';
 import AuthService from "../services/auth.service";
 import UserService from "../services/user.service";
 import {
@@ -67,29 +67,28 @@ const Keranjang = () => {
                                 <Typography variant="h4" sx={{ fontWeight: 'bold' }} align='left' gutterBottom>
                                     Ringkasan belanja
                                 </Typography>
-                                <Stack direction="row" spacing={2} justifyContent="space-between" sx={{ marginBottom: '10%', marginTop: '10%' }}>
-                                    <Typography variant="h5">
-                                        Total Harga
-                                    </Typography>
+                                <>
                                     {cart.length ? (
-                                        <Typography variant="h5" align="right">
-                                            Rp. {totalPriceCart}
-                                        </Typography>
-
+                                        <Stack direction="row" spacing={2} justifyContent="space-between" sx={{ marginBottom: '10%', marginTop: '10%' }}>
+                                            <Typography variant="h5">
+                                                Total Harga
+                                            </Typography>
+                                            <Typography variant="h5" align="right">
+                                                Rp. {totalPriceCart}
+                                            </Typography>
+                                        </Stack>
                                     ) :
-                                        <div style={{ marginTop: '20%' }}>
+                                        <div style={{ marginTop: '20%',marginLeft: '40%' }}>
                                             <Loader />
                                         </div>
                                     }
-                                </Stack>
+                                </>
                                 {detailUser ? (
                                     <ButtonGroup variant="contained" aria-label="outlined button group">
-                                        <ModalCheckOut subTotal={totalPriceCart} saldoUser={currency && currency(detailUser?.saldo)} />
+                                        <ModalCheckOutCart userId={cart.userId} productId={cart.productId} subTotal={totalPriceCart} saldoUser={currency && currency(detailUser?.saldo)} />
                                     </ButtonGroup>
 
-                                ) : <div style={{ marginTop: '20%' }}>
-                                    <Loader />
-                                </div>}
+                                ) : ('')}
                             </Item>
                         </Grid>
                     </Grid>

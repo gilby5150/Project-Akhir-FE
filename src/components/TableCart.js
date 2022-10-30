@@ -14,7 +14,7 @@ import TableRow from '@mui/material/TableRow';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
+// import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -62,7 +62,7 @@ function EnhancedTableHead(props) {
     return (
         <TableHead>
             <TableRow>
-                <TableCell padding="checkbox">
+                {/* <TableCell padding="checkbox">
                     <Checkbox
                         color="primary"
                         indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -72,7 +72,7 @@ function EnhancedTableHead(props) {
                             'aria-label': 'select all desserts',
                         }}
                     />
-                </TableCell>
+                </TableCell> */}
             </TableRow>
         </TableHead>
     );
@@ -149,6 +149,7 @@ export default function EnhancedTable() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [cart, setCart] = React.useState([]);
+    console.log(cart)
 
     useEffect(() => {
         CartService.getAllCart().then(
@@ -240,7 +241,7 @@ export default function EnhancedTable() {
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row, index) => {
                                     const isItemSelected = isSelected(row.productName);
-                                    const labelId = `enhanced-table-checkbox-${index}`;
+                                    // const labelId = `enhanced-table-checkbox-${index}`;
 
                                     return (
                                         <TableRow
@@ -252,7 +253,7 @@ export default function EnhancedTable() {
                                             key={row.productName}
                                             selected={isItemSelected}
                                         >
-                                            <TableCell padding="checkbox">
+                                            {/* <TableCell padding="checkbox">
                                                 <Checkbox
                                                     color="primary"
                                                     checked={isItemSelected}
@@ -260,10 +261,10 @@ export default function EnhancedTable() {
                                                         'aria-labelledby': labelId,
                                                     }}
                                                 />
-                                            </TableCell>
+                                            </TableCell> */}
                                             <TableCell
                                                 component="th"
-                                                id={labelId}
+                                                // id={labelId}
                                                 scope="row"
                                                 padding="none"
                                             >
@@ -281,15 +282,6 @@ export default function EnhancedTable() {
                                         </TableRow>
                                     );
                                 })}
-                            {emptyRows > 0 && (
-                                <TableRow
-                                    style={{
-
-                                    }}
-                                >
-                                    <TableCell colSpan={6} />
-                                </TableRow>
-                            )}
                         </TableBody>
                     </Table>
                 </TableContainer>

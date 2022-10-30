@@ -11,6 +11,8 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ModalEditRole from './ModalEditRole'
+import BlockIcon from '@mui/icons-material/Block';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -70,7 +72,7 @@ function EnhancedTableHead(props) {
                         }}
                     />
                 </StyledTableCell>
-                <StyledTableCell>Nama</StyledTableCell>
+                <StyledTableCell align="center">Nama</StyledTableCell>
                 <StyledTableCell align="center">Photo</StyledTableCell>
                 <StyledTableCell align="center">Role</StyledTableCell>
                 <StyledTableCell align="center">Action</StyledTableCell>
@@ -147,11 +149,11 @@ EnhancedTableToolbar.propTypes = {
 export default function EnhancedTable() {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
+    const [checkedAll, setCheckedAll] = React.useState(false);
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [content, setContent] = React.useState([]);
-    console.log(content)
     // const [roleUser, setRoleUser] = React.useState('');
 
     useEffect(() => {
@@ -253,17 +255,33 @@ export default function EnhancedTable() {
                                             key={row.username}
                                             selected={isItemSelected}
                                         >
-                                            <TableCell padding="checkbox">
-                                                <Checkbox
-                                                    onClick={(event) => handleClick(event, row.username)}
-                                                    color="primary"
-                                                    checked={isItemSelected}
-                                                    inputProps={{
-                                                        'aria-labelledby': labelId,
-                                                    }}
-                                                />
-                                            </TableCell>
+                                            {row.name === "superadmin" ? (
+                                                <TableCell padding="checkbox">
+                                                    <Checkbox
+                                                        disabled
+                                                        onClick={(event) => handleClick(event, row.username)}
+                                                        color="secondary"
+                                                        checked={isItemSelected}
+                                                        inputProps={{
+                                                            'aria-labelledby': labelId,
+                                                        }}
+                                                    />
+                                                    {/* <CheckBoxOutlineBlankIcon style={{ color: 'grey' }} /> */}
+                                                </TableCell>
+                                            ) : (
+                                                <TableCell padding="checkbox">
+                                                    <Checkbox
+                                                        onClick={(event) => handleClick(event, row.username)}
+                                                        color="primary"
+                                                        checked={isItemSelected}
+                                                        inputProps={{
+                                                            'aria-labelledby': labelId,
+                                                        }}
+                                                    />
+                                                </TableCell>
+                                            )}
                                             <TableCell
+                                                align="center"
                                                 component="th"
                                                 id={labelId}
                                                 scope="row"
@@ -290,7 +308,9 @@ export default function EnhancedTable() {
                                                 </TableCell>
                                             )}
                                             <TableCell align="center">{row.name}</TableCell>
+                                            {row.name !== "superadmin" ? (
                                                 <TableCell align="center"><ModalEditRole userId={row.id} /></TableCell>
+                                            ) : (<TableCell align="center"><BlockIcon style={{ color: 'red' }} /></TableCell>)}
                                         </TableRow>
                                     );
                                 })}

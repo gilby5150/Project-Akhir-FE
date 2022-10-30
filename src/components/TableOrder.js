@@ -33,31 +33,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 
-
-function createData(nama, photo, harga, quantity, payment, status) {
-    return { nama, photo, harga, quantity, payment, status };
-}
-
-const rows = [
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Cod', 'shipped'),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Saldo', 'success'),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Cod', 'shipped'),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Saldo', 'success'),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Cod', 'shipped'),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Saldo', 'success'),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Cod', 'shipped'),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Saldo', 'success'),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Cod', 'shipped'),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Saldo', 'success'),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Cod', 'shipped'),
-    createData(faker.commerce.productName(), faker.image.food(50, 50, false), faker.commerce.price(1000, 20000, 2, 'Rp. '), faker.commerce.price(1, 50, 0), 'Saldo', 'success'),
-];
-
 export default function CustomizedTables() {
     const [order, setOrder] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+    console.log(order)
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
@@ -95,7 +75,7 @@ export default function CustomizedTables() {
                                 <StyledTableCell align="center">Quantitas</StyledTableCell>
                                 <StyledTableCell align="center">Total Harga</StyledTableCell>
                                 <StyledTableCell align="center">Payment Method</StyledTableCell>
-                                <StyledTableCell align="center">Status</StyledTableCell>
+                                {/* <StyledTableCell align="center">Status</StyledTableCell> */}
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -103,7 +83,7 @@ export default function CustomizedTables() {
                                 ? order.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 : order
                             ).map((row) => (
-                                <StyledTableRow key={row.productName}>
+                                <StyledTableRow key={row.id}>
                                     <StyledTableCell component="th" scope="row">
                                         {row.productName}
                                     </StyledTableCell>
@@ -118,7 +98,7 @@ export default function CustomizedTables() {
                                     <StyledTableCell align="center">{row.quantity}</StyledTableCell>
                                     <StyledTableCell align="center">{row.totalPrice}</StyledTableCell>
                                     <StyledTableCell align="center">{row.payment}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.status}</StyledTableCell>
+                                    {/* <StyledTableCell align="center">{row.status}</StyledTableCell> */}
                                 </StyledTableRow>
                             ))}
                         </TableBody>

@@ -43,7 +43,7 @@ const DetailProduct = () => {
         }
         getDetailUser()
         // eslint-disable-next-line
-    }, [user])
+    }, [])
     const [cart, setCart] = useState({
         userId: 0,
         productId: 0,
@@ -57,8 +57,8 @@ const DetailProduct = () => {
 
     const handleSubmitCart = (e) => {
         e.preventDefault();
-        const harga = (content.price * values);
-        CartService.createCart(user.id, content.id, values, harga).then(
+        const totalPrice = (content.price * values);
+        CartService.createCart(user.id, content.id, values, totalPrice).then(
             () => {
                 navigate(`/keranjang/${user.username}`);
                 window.location.reload();
@@ -198,7 +198,7 @@ const DetailProduct = () => {
                                                 justifyContent="center"
                                                 alignItems="center"
                                                 spacing={2}>
-                                                <ModalCheckOut subTotal={currency && currency(content?.price * values)} userId={user.id} productId={content.id} quantity={values} saldoUser={currency && currency(detailUser?.data.saldo)} />
+                                                <ModalCheckOut subTotal={content?.price * values} userId={user.id} productId={content.id} quantity={values} saldoUser={currency && currency(detailUser?.data.saldo)} />
                                                 <Button variant="contained" onClick={handleSubmitCart}><ShoppingCartIcon /></Button>
                                             </Stack>
                                         ) : ('')}

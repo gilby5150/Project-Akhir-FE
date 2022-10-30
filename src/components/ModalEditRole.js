@@ -22,7 +22,7 @@ const style = {
   p: 4,
 };
 
-export default function ModalEditRole({ userId, roleId }) {
+export default function ModalEditRole({ userId, roleName }) {
   // const {id} = useParams();
   const user = AuthService.getCurrentUser();
   const [open, setOpen] = React.useState(false);
@@ -34,7 +34,7 @@ export default function ModalEditRole({ userId, roleId }) {
 
   const [successful, setSuccessful] = useState(false);
   const [message, setMessage] = useState("");
-  
+  const [content, setContent] = React.useState([]);
   const navigate = useNavigate();
   
   const [editRole, setEditRole] = useState({
@@ -43,6 +43,19 @@ export default function ModalEditRole({ userId, roleId }) {
   
   const [showSuperAdminBoard, setShowSuperAdminBoard] = React.useState(false)
   React.useEffect(() => {
+    UserService.getUserRole().then(
+      (response) => {
+          setContent(response.data);
+      },
+      (error) => {
+          const _content =
+              (error.response && error.response.data) ||
+              error.message ||
+              error.toString();
+
+          setContent(_content);
+      }
+  );
     if (user) {
       setShowSuperAdminBoard(user.roles.includes("ROLE_SUPERADMIN"))
     }// eslint-disable-next-line
@@ -86,9 +99,7 @@ export default function ModalEditRole({ userId, roleId }) {
 
   return (
     <div>
-      {showSuperAdminBoard ? (
-        <Button disabled onClick={handleOpen}><EditIcon /></Button>
-      ): (<Button onClick={handleOpen}><EditIcon /></Button>)}
+      <Button onClick={handleOpen}><EditIcon /></Button>
       <Modal
         open={open}
         onClose={handleClose}

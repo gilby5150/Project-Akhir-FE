@@ -96,7 +96,7 @@ export default function PersistentDrawerLeft({ children }) {
     const Menu = [
         { href: '/home', name: 'Home', icon: <HomeOutlinedIcon /> },
         { href: `/top-up/${user && user.username}`, name: 'TopUP Saldo', icon: <AccountBalanceWalletOutlinedIcon /> },
-        { href: '/keranjang', name: 'Keranjang', icon: <ShoppingCartOutlinedIcon /> },
+        { href: `/keranjang/${user && user.username}`, name: 'Keranjang', icon: <ShoppingCartOutlinedIcon /> },
     ]
     const Kategori = [
         { href: '/category/laptop', name: 'Laptop', icon: <LaptopChromebookOutlinedIcon /> },
